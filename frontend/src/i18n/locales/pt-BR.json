@@ -1,5 +1,8 @@
 {
-  "app": { "name": "CoWriter", "tagline": "Revisão inteligente de capítulos de ficção" },
+  "app": {
+    "name": "CoWriter",
+    "tagline": "Revisão inteligente de capítulos de ficção"
+  },
   "auth": {
     "login_title": "Entrar",
     "signup_title": "Criar conta",
@@ -16,7 +19,12 @@
     "welcome_bonus": "Ganhe 5.000 palavras de bônus ao criar sua conta — sem cartão.",
     "check_email": "Verifique seu email para confirmar a conta."
   },
-  "nav": { "dashboard": "Projetos", "credits": "Créditos", "logout": "Sair", "history": "Histórico" },
+  "nav": {
+    "dashboard": "Projetos",
+    "credits": "Créditos",
+    "logout": "Sair",
+    "history": "Histórico"
+  },
   "dashboard": {
     "title": "Meus Projetos",
     "new_project": "Novo Projeto",
@@ -67,7 +75,10 @@
     "occurrences": "{{count}} ocorrência(s)",
     "no_issues": "Nenhum problema encontrado neste check.",
     "credits_used": "Créditos consumidos nesta análise",
-    "words_analyzed": "Palavras analisadas"
+    "words_analyzed": "Palavras analisadas",
+    "no_credit_message": "Saldo de créditos insuficiente para rodar a leitura crítica (IA). Os checks determinísticos (Fatos) rodaram normalmente e não consomem crédito.",
+    "summary_label": "Resumo",
+    "sensory_distribution_label": "Distribuição por canal sensorial"
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -77,7 +88,12 @@
     "sensory_rotation": "Rotação Sensorial",
     "filter_words": "Palavras-Filtro",
     "dialogue_tag_variety": "Variedade de Marcadores de Diálogo",
-    "paragraph_opening_monotony": "Monotonia de Abertura de Parágrafo"
+    "paragraph_opening_monotony": "Monotonia de Abertura de Parágrafo",
+    "scene_objective": "Objetivo de Cena",
+    "scene_magnetism": "Magnetismo de Cena",
+    "linger_cortar": "Linger/Cortar",
+    "subtext_frame": "Subtexto em Diálogo",
+    "voiceprint_pov_filter": "Voiceprint / Filtro de POV"
   },
   "wallet": {
     "balance": "Saldo",
@@ -91,5 +107,11 @@
     "consumo": "Consumo",
     "empty": "Nenhuma transação ainda."
   },
-  "common": { "loading": "Carregando...", "save": "Salvar", "delete": "Excluir", "back": "Voltar", "language_selector": "Idioma da interface" }
+  "common": {
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "back": "Voltar",
+    "language_selector": "Idioma da interface"
+  }
 }

@@ -1,5 +1,8 @@
 {
-  "app": { "name": "CoWriter", "tagline": "Intelligente Überarbeitung von Belletristik-Kapiteln" },
+  "app": {
+    "name": "CoWriter",
+    "tagline": "Intelligente Überarbeitung von Belletristik-Kapiteln"
+  },
   "auth": {
     "login_title": "Anmelden",
     "signup_title": "Konto erstellen",
@@ -16,7 +19,12 @@
     "welcome_bonus": "Erhalte 5.000 Bonuswörter bei der Kontoerstellung — ohne Kreditkarte.",
     "check_email": "Bitte E-Mail zur Bestätigung des Kontos prüfen."
   },
-  "nav": { "dashboard": "Projekte", "credits": "Guthaben", "logout": "Abmelden", "history": "Verlauf" },
+  "nav": {
+    "dashboard": "Projekte",
+    "credits": "Guthaben",
+    "logout": "Abmelden",
+    "history": "Verlauf"
+  },
   "dashboard": {
     "title": "Meine Projekte",
     "new_project": "Neues Projekt",
@@ -67,7 +75,10 @@
     "occurrences": "{{count}} Vorkommen",
     "no_issues": "Keine Probleme in diesem Check gefunden.",
     "credits_used": "Verbrauchtes Guthaben in dieser Analyse",
-    "words_analyzed": "Analysierte Wörter"
+    "words_analyzed": "Analysierte Wörter",
+    "no_credit_message": "Unzureichendes Guthaben für die kritische Lektüre (KI). Die deterministischen Prüfungen (Fakten) liefen normal und verbrauchen kein Guthaben.",
+    "summary_label": "Zusammenfassung",
+    "sensory_distribution_label": "Verteilung nach Sinneskanal"
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -77,7 +88,12 @@
     "sensory_rotation": "Sensorische Rotation",
     "filter_words": "Filterwörter",
     "dialogue_tag_variety": "Vielfalt der Redebegleitsätze",
-    "paragraph_opening_monotony": "Monotonie der Absatzanfänge"
+    "paragraph_opening_monotony": "Monotonie der Absatzanfänge",
+    "scene_objective": "Szenenziel",
+    "scene_magnetism": "Szenenmagnetismus",
+    "linger_cortar": "Verweilen/Schnitt",
+    "subtext_frame": "Subtext im Dialog",
+    "voiceprint_pov_filter": "Stimmabdruck / POV-Filter"
   },
   "wallet": {
     "balance": "Guthaben",
@@ -91,5 +107,11 @@
     "consumo": "Verbrauch",
     "empty": "Noch keine Transaktionen."
   },
-  "common": { "loading": "Lädt...", "save": "Speichern", "delete": "Löschen", "back": "Zurück", "language_selector": "Oberflächensprache" }
+  "common": {
+    "loading": "Lädt...",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "back": "Zurück",
+    "language_selector": "Oberflächensprache"
+  }
 }

@@ -5,6 +5,7 @@ from auth import current_user
 from database import get_pool
 from checks.helpers import count_words
 from checks.runner import run_deterministic_checks
+from checks.ai_checks import run_judgment_checks
 from routers.chapters import _assert_chapter_owner, _assert_project_owner
 
 router = APIRouter()
@@ -36,30 +37,71 @@ async def analyze_chapter(chapter_id: str, user=Depends(current_user)):
     idioma = chapter['idioma_detectado'] or chapter['project_idioma']
     palavras = count_words(texto)
 
-    resultados = run_deterministic_checks(texto, idioma)
+    resultados_fatos = run_deterministic_checks(texto, idioma)
+
+    creditos_necessarios = math.ceil(palavras / WORDS_PER_CREDIT) if palavras else 0
+    wallet = await pool.fetchrow("SELECT saldo_creditos FROM credit_wallet WHERE user_id=$1", user['sub'])
+    saldo = float(wallet['saldo_creditos']) if wallet else 0
+    saldo_suficiente = saldo >= creditos_necessarios and creditos_necessarios > 0
+
+    resultados_julgamento = []
+    creditos_consumidos = 0
+    leitura_critica_status = 'sem_credito'
+    if saldo_suficiente:
+        resultados_julgamento = await run_judgment_checks(texto, idioma)
+        creditos_consumidos = creditos_necessarios
+        leitura_critica_status = 'ok'
+    elif creditos_necessarios == 0:
+        leitura_critica_status = 'sem_credito'
+
+    resultados = resultados_fatos + resultados_julgamento
 
     async with pool.acquire() as conn:
         async with conn.transaction():
             run_row = await conn.fetchrow(
                 "INSERT INTO analysis_runs (chapter_id, palavras_analisadas, creditos_consumidos, resultados_json) "
-                "VALUES ($1, $2, 0, $3) RETURNING id, \"timestamp\", palavras_analisadas, creditos_consumidos",
-                chapter_id, palavras, json.dumps({'checks_fatos': resultados}),
+                "VALUES ($1, $2, $3, $4) RETURNING id, \"timestamp\", palavras_analisadas, creditos_consumidos",
+                chapter_id, palavras, creditos_consumidos,
+                json.dumps({'checks_fatos': resultados_fatos, 'checks_julgamento': resultados_julgamento}),
             )
             for r in resultados:
+                extra_payload = {
+                    'items': r['detalhes'],
+                    'distribuicao': r.get('distribuicao'),
+                    'summary': r.get('summary'),
+                }
                 await conn.execute(
                     "INSERT INTO check_results (analysis_run_id, check_type, numero, tipo, confiabilidade, score, contagem, detalhes_json) "
                     "VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
                     run_row['id'], r['check_type'], r['numero'], r['tipo'], r['confiabilidade'],
-                    r['score'], r['contagem'], json.dumps(r['detalhes']),
+                    r['score'], r['contagem'], json.dumps(extra_payload),
                 )
+            if creditos_consumidos > 0:
+                await conn.execute(
+                    "UPDATE credit_wallet SET saldo_creditos = saldo_creditos - $1, atualizado_em = now() "
+                    "WHERE user_id=$2",
+                    creditos_consumidos, user['sub'],
+                )
+                await conn.execute(
+                    "INSERT INTO credit_transactions (user_id, tipo, quantidade, referencia_id) "
+                    "VALUES ($1, 'consumo', $2, $3)",
+                    user['sub'], -creditos_consumidos, run_row['id'],
+                )
+
+    leitura_critica = {'status': leitura_critica_status, 'checks': resultados_julgamento}
+    if leitura_critica_status == 'sem_credito':
+        leitura_critica['mensagem'] = (
+            'Saldo de créditos insuficiente para rodar a leitura crítica (IA). '
+            'Os checks determinísticos (Fatos) rodaram normalmente e não consomem crédito.'
+        )
 
     return {
         'analysis_run_id': str(run_row['id']),
         'timestamp': run_row['timestamp'],
         'palavras_analisadas': palavras,
-        'creditos_consumidos': 0,
-        'fatos': resultados,
-        'leitura_critica': {'status': 'em_breve', 'mensagem': 'Checks de julgamento de IA chegam na próxima fase.'},
+        'creditos_consumidos': creditos_consumidos,
+        'fatos': resultados_fatos,
+        'leitura_critica': leitura_critica,
     }
 
 
@@ -80,12 +122,28 @@ async def get_analysis_run(analysis_run_id: str, user=Depends(current_user)):
         analysis_run_id,
     )
     fatos = []
+    julgamento = []
     for c in checks:
         item = dict(c)
-        item['detalhes'] = json.loads(item.pop('detalhes_json'))
-        fatos.append(item)
+        raw = json.loads(item.pop('detalhes_json'))
+        if isinstance(raw, dict) and 'items' in raw:
+            item['detalhes'] = raw.get('items') or []
+            if raw.get('distribuicao') is not None:
+                item['distribuicao'] = raw['distribuicao']
+            if raw.get('summary'):
+                item['summary'] = raw['summary']
+        else:
+            item['detalhes'] = raw or []
+        if item['tipo'] == 'julgamento':
+            julgamento.append(item)
+        else:
+            fatos.append(item)
     result = dict(run_row)
     result['fatos'] = fatos
+    result['leitura_critica'] = {
+        'status': 'ok' if julgamento else ('sem_credito' if run_row['creditos_consumidos'] == 0 else 'ok'),
+        'checks': julgamento,
+    }
     return result
 
 
@@ -103,3 +161,4 @@ async def project_history(project_id: str, user=Depends(current_user)):
         project_id,
     )
     return [dict(r) for r in rows]
+
