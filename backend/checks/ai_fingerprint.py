@@ -3,10 +3,11 @@ from .helpers import excerpt
 from .lexicons import CLICHES, normalize_lang, RELIABILITY
 
 
-def analyze(text: str, idioma: str) -> dict:
+def analyze(text: str, idioma: str, custom_patterns: list = None) -> dict:
     lang = normalize_lang(idioma)
     phrases = CLICHES.get(lang, CLICHES['en'])
     detalhes = []
+    custom_hits = {}
     for phrase in phrases:
         for m in re.finditer(re.escape(phrase), text, re.IGNORECASE):
             detalhes.append({
@@ -15,6 +16,18 @@ def analyze(text: str, idioma: str) -> dict:
                 'inicio': m.start(),
                 'fim': m.end(),
             })
+    for rule in (custom_patterns or []):
+        texto_padrao = rule['texto_padrao']
+        matches = list(re.finditer(re.escape(texto_padrao), text, re.IGNORECASE))
+        if matches:
+            custom_hits[rule['id']] = len(matches)
+            for m in matches:
+                detalhes.append({
+                    'trecho': excerpt(text, m.start(), m.end()),
+                    'sugestao': f"Regra personalizada disparada: \"{texto_padrao}\". Reescreva esse trecho.",
+                    'inicio': m.start(),
+                    'fim': m.end(),
+                })
     return {
         'check_type': 'ai_fingerprint',
         'numero': 1,
@@ -23,4 +36,5 @@ def analyze(text: str, idioma: str) -> dict:
         'score': len(detalhes),
         'contagem': len(detalhes),
         'detalhes': detalhes,
+        'custom_hits': custom_hits,
     }

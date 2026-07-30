@@ -1,0 +1,35 @@
+{
+  "summary": "Fase 3 (Minhas Regras / banned_patterns) end-to-end verified. Backend: 18/18 pytest tests pass (auth, CRUD, invalid tipo=400, scope filter global vs project, import multi-line, export text/plain, RLS boundary user B blocked, and — critically — analyze_chapter integration for tipo=frase (ai_fingerprint), tipo=gesto (gesture_cooldown with custom cooldown_max flagging only excess), tipo=descritor (descriptor_cooldown), plus regression that 8-check pipeline still fires when zero custom rules are present). Frontend: full RulesPage CRUD verified via Playwright — scope tabs (project/global), type-select conditional cooldown field (visible for gesto+descritor, hidden for frase+estrutura), create / import multi-line (3 lines paste creates 3 rules) / export .txt download (file contains all rule texts) / delete rule (removes from list). CRITICAL INTEGRATION UI-driven: created chapter with 2× 'o coração dela disparou' + save+analyze via confirm modal → analysis result page shows 'Regra personalizada disparada' suggestion referencing target phrase → returned to Rules page → 'triggered' counter for that rule advanced from 1x to 3x (delta = 2, matching 2 occurrences). Regression: existing Fase 1+2 15/15 tests still green; wallet still shows 5 credits after analysis (checks 1-8 free, credits_consumidos=0). No blocking issues.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_banned_patterns.py",
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/fase3_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "routers/rules.py:14-27 — list_banned_patterns has no cross-user leak, but the default (no project_id) returns only global rules. This is intentional per the spec but could confuse users viewing all rules at once. Consider adding a 'scope=all' option later.",
+    "routers/rules.py:70-90 — import endpoint has no MAX_LINES cap; malicious/accidental paste of thousands of lines would each hit a separate INSERT inside a single transaction. Bound recommended (e.g., 500).",
+    "routers/analysis.py:71-75 — disparos_count update is inside the same transaction as analysis_run insert (good, atomic). No optimistic concurrency issues observed.",
+    "checks/*.py — case-insensitive re.escape matching used consistently across ai_fingerprint/gesture_cooldown/descriptor_cooldown for custom_patterns; overlapping matches (e.g. rule 'apertou' inside 'apertou os punhos') would double-count when both exist as separate rules, but this is expected (each rule is independent).",
+    "frontend RulesPage.jsx:38-92 — no confirm() before delete; single click on trash immediately deletes the rule. Consider a lightweight confirmation for accidental deletes.",
+    "frontend RulesPage.jsx:89-92 — handleDelete lacks try/catch; if API fails, list is not reloaded and no toast shown."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_banned_patterns.py (new — 18 pytest cases)"
+  ],
+  "success_rate": {"backend": "100% (33/33 pytest: 18 Fase 3 + 15 regression)", "frontend": "100% of in-scope Fase 3 UI flows"},
+  "test_credentials": "demo.escritor@cowriter.test / CoWriter#2026 (5 credits, has global 'o coração dela disparou' frase rule + 'acenou com a cabeça' gesto rule + newly imported test rules; also demo.escritor2@cowriter.test / CoWriter#2026 for RLS)",
+  "seed_data_creation": "Created several TEST_-prefixed banned_patterns and TEST_INT_Rules_* projects/chapters (auto-cleaned by pytest fixtures). One residual UI-created global rule 'TESTUI_frase_1785450635' left in demo user's globals — safe to keep or delete.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Fase 3 is fully verified. AI-judgment checks 9-14 remain out of scope (Fase 4, requires ANTHROPIC_API_KEY). Rules integration into checks 1/2/3 works correctly: 'frase'+'estrutura' feed ai_fingerprint, 'gesto' feeds gesture_cooldown honoring custom cooldown_max, 'descritor' feeds descriptor_cooldown. disparos_count increments atomically in the same DB transaction as the analysis_run insert. RLS confirmed at both DB and API layer."
+}

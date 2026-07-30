@@ -36,7 +36,23 @@ async def analyze_chapter(chapter_id: str, user=Depends(current_user)):
     idioma = chapter['idioma_detectado'] or chapter['project_idioma']
     palavras = count_words(texto)
 
-    resultados = run_deterministic_checks(texto, idioma)
+    pattern_rows = await pool.fetch(
+        "SELECT id, tipo, texto_padrao, cooldown_max FROM banned_patterns "
+        "WHERE user_id=$1 AND (project_id=$2 OR project_id IS NULL)",
+        user['sub'], chapter['project_id'],
+    )
+    custom_patterns_by_tipo = {}
+    for p in pattern_rows:
+        custom_patterns_by_tipo.setdefault(p['tipo'], []).append(
+            {'id': str(p['id']), 'texto_padrao': p['texto_padrao'], 'cooldown_max': p['cooldown_max']}
+        )
+
+    resultados = run_deterministic_checks(texto, idioma, custom_patterns_by_tipo)
+
+    custom_hits_total = {}
+    for r in resultados:
+        for rule_id, count in r.get('custom_hits', {}).items():
+            custom_hits_total[rule_id] = custom_hits_total.get(rule_id, 0) + count
 
     async with pool.acquire() as conn:
         async with conn.transaction():
@@ -51,6 +67,11 @@ async def analyze_chapter(chapter_id: str, user=Depends(current_user)):
                     "VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
                     run_row['id'], r['check_type'], r['numero'], r['tipo'], r['confiabilidade'],
                     r['score'], r['contagem'], json.dumps(r['detalhes']),
+                )
+            for rule_id, count in custom_hits_total.items():
+                await conn.execute(
+                    "UPDATE banned_patterns SET disparos_count = disparos_count + $1 WHERE id=$2 AND user_id=$3",
+                    count, rule_id, user['sub'],
                 )
 
     return {

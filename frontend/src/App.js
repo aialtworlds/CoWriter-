@@ -12,6 +12,7 @@ import ProjectDetail from "@/pages/ProjectDetail";
 import ChapterNew from "@/pages/ChapterNew";
 import ChapterResult from "@/pages/ChapterResult";
 import CreditStatement from "@/pages/CreditStatement";
+import RulesPage from "@/pages/RulesPage";
 
 function AppLayout({ children }) {
   return (
@@ -70,6 +71,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AppLayout><CreditStatement /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects/:projectId/rules"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout><RulesPage /></AppLayout>
                   </ProtectedRoute>
                 }
               />

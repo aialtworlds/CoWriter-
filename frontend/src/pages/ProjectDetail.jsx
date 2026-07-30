@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Plus, FileText, Coins } from 'lucide-react';
+import { ArrowLeft, Plus, FileText, Coins, ListChecks } from 'lucide-react';
 import { api } from '../lib/api';
 import { Button } from '../components/ui/button';
 
@@ -30,6 +30,11 @@ export default function ProjectDetail() {
           <p className="text-sm text-[#9CA3AF]">{project?.idioma} {project?.genero ? `· ${project.genero}` : ''}</p>
         </div>
         <div className="flex gap-2">
+          <Link to={`/projects/${projectId}/rules`}>
+            <Button variant="outline" data-testid="project-rules-link" className="border-white/15 text-[#E6E4DD] hover:bg-white/5">
+              <ListChecks size={14} className="mr-1" /> {t('rules.title')}
+            </Button>
+          </Link>
           <Link to="/credits">
             <Button variant="outline" data-testid="project-credit-statement-link" className="border-white/15 text-[#E6E4DD] hover:bg-white/5">
               <Coins size={14} className="mr-1" /> {t('project.credit_statement')}

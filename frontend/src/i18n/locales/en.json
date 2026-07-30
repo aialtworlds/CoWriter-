@@ -91,5 +91,25 @@
     "consumo": "Consumption",
     "empty": "No transactions yet."
   },
+  "rules": {
+    "title": "My Rules",
+    "scope_project": "This project",
+    "scope_global": "Global (all projects)",
+    "new_rule": "New rule",
+    "type_frase": "Banned phrase",
+    "type_gesto": "Gesture cooldown",
+    "type_descritor": "Descriptor cooldown",
+    "type_estrutura": "Structure to avoid",
+    "text_placeholder": "Rule text",
+    "cooldown_label": "Occurrence limit",
+    "add_button": "Add",
+    "import_title": "Import (one per line)",
+    "import_placeholder": "Paste one rule per line...",
+    "import_button": "Import",
+    "export_button": "Export .txt",
+    "triggered": "triggered {{count}}x",
+    "empty": "No rules yet.",
+    "delete": "Delete rule"
+  },
   "common": { "loading": "Loading...", "save": "Save", "delete": "Delete", "back": "Back", "language_selector": "Interface language" }
 }

@@ -91,5 +91,25 @@
     "consumo": "Consumo",
     "empty": "Ainda sem transações."
   },
+  "rules": {
+    "title": "As Minhas Regras",
+    "scope_project": "Deste projeto",
+    "scope_global": "Global (todos os projetos)",
+    "new_rule": "Nova regra",
+    "type_frase": "Frase proibida",
+    "type_gesto": "Gesto em cooldown",
+    "type_descritor": "Descritor em cooldown",
+    "type_estrutura": "Estrutura a evitar",
+    "text_placeholder": "Texto da regra",
+    "cooldown_label": "Limite de ocorrências",
+    "add_button": "Adicionar",
+    "import_title": "Importar (uma por linha)",
+    "import_placeholder": "Cole uma regra por linha...",
+    "import_button": "Importar",
+    "export_button": "Exportar .txt",
+    "triggered": "disparada {{count}}x",
+    "empty": "Ainda sem regras.",
+    "delete": "Eliminar regra"
+  },
   "common": { "loading": "A carregar...", "save": "Guardar", "delete": "Eliminar", "back": "Voltar", "language_selector": "Idioma da interface" }
 }
