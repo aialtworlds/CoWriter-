@@ -67,7 +67,8 @@
     "occurrences": "{{count}} occurrence(s)",
     "no_issues": "No issues found in this check.",
     "credits_used": "Credits used in this analysis",
-    "words_analyzed": "Words analyzed"
+    "words_analyzed": "Words analyzed",
+    "run_critical_button": "Run Critical Reading"
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -77,7 +78,12 @@
     "sensory_rotation": "Sensory Rotation",
     "filter_words": "Filter Words",
     "dialogue_tag_variety": "Dialogue Tag Variety",
-    "paragraph_opening_monotony": "Paragraph-Opening Monotony"
+    "paragraph_opening_monotony": "Paragraph-Opening Monotony",
+    "scene_objective": "Scene Objective",
+    "scene_magnetism": "Scene Magnetism",
+    "linger_cortar": "Linger / Cut",
+    "subtext_frame": "Dialogue Subtext",
+    "voiceprint_pov_filter": "Voiceprint / POV Filter"
   },
   "wallet": {
     "balance": "Balance",

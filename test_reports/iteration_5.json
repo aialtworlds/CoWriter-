@@ -1,0 +1,40 @@
+{
+  "summary": "Fase 4 (5 AI Judgment Checks + credit economy) end-to-end verified. Backend: 10/10 pytest passed in /app/backend/tests/test_critical_reading.py (auth guard, real Claude-Sonnet-5 5-check run, contextual AI output assertion referencing Marina/Tomas/Clara/tapa, exact wallet debit -1, credit_transactions row -1 consumo, analysis_run persistence with leitura_critica_executada=true and 8 fatos still present, idempotent second call with ja_executada=true and NO recharge, insufficient balance 402 with body {erro:'saldo_insuficiente', necessario, saldo} and no side effects, cross-user ownership 404). Frontend UI: login → /analysis/:id → 'Critical Reading' tab → disclaimer + estimate ('would cost 1 credits. Current balance: 2') + Run button rendered from critical-not-run state → Run click → 5 JudgmentCard components rendered with IA sparkle badges → header credit counter decremented 2→1 → 'Credits used in this analysis' updated 0→1 → reload persists all 5 cards, not-run hidden, no re-charge → /credits page shows new Consumption -1 tx. AI content is genuinely contextual (Portuguese, refers to specific scene elements, not stubbed).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Global header credit counter", "issues": ["On initial page load after login, header briefly shows '0 credits' before WalletContext hydrates (flicker). Consider a loading state or hiding the counter until saldo is resolved."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_critical_reading.py",
+    "/app/test_reports/pytest/fase4_critical_results.xml",
+    "/app/test_reports/pytest/fase4_402.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "routers/analysis.py:132 — HTTPException(402, {...}) wraps the dict inside {'detail': {...}} per FastAPI default. The product statement says the body should be {'erro':'saldo_insuficiente','necessario':N,'saldo':M} directly. Frontend (ChapterResult.jsx:48) only inspects err.response?.status === 402 so it works today, but any external client (mobile, curl consumer) parsing the top-level 'erro' key will fail. Consider returning a JSONResponse(status_code=402, content={...}) to match spec exactly, or update docs to say body is under detail.",
+    "routers/analysis.py:102-167 — critical_reading endpoint has NO row-level lock on credit_wallet; two concurrent POSTs to the same analysis_run_id from parallel clients could both pass the balance check before either updates the row, potentially allowing negative saldo. Recommend SELECT FOR UPDATE inside the transaction, OR unique constraint (analysis_run_id, tipo='julgamento') to at least prevent double-insert of check_results. Idempotency check currently happens OUTSIDE the transaction so a race between two clients is not covered.",
+    "routers/analysis.py:107-123 — idempotency read of check_results uses tipo='julgamento' but does not filter check_results to only the 5 known judgment check_types; if the schema ever adds another 'julgamento' typed check, cached read will return more than 5. Consider filtering by check_type IN (...) or numero BETWEEN 9 AND 13.",
+    "ai/judgment_checks.py:234-245 — _run_single_check swallows ALL exceptions into an 'erro':True placeholder without logging, and then run_critical_reading still charges the user 1 credit and persists the erro rows. If Claude API returns a malformed response for any 1 of the 5 checks, the user pays but sees a broken card. Options: (a) log the exception via logger.exception; (b) if any check has erro=True, retry it once; (c) if >=1 check failed, refund the credit or skip billing.",
+    "ai/judgment_checks.py:201-205 — _extract_json only handles ```json ... ``` fences; if Claude occasionally prefixes with 'Aqui está o JSON:' or trailing commentary the parse will still fail. Consider a fallback regex to extract the outermost {...} block.",
+    "components/AnalysisResult.jsx:135-139 — critical-estimate-text renders even when criticalEstimate has creditos_estimados_ia=0 (empty chapter), showing 'would cost 0 credits'. Minor UX polish: hide estimate line if credits==0 or show 'no cost'.",
+    "pages/ChapterResult.jsx:36-56 — handleRunCritical toast on 402 is hardcoded Portuguese ('Saldo de créditos insuficiente…'). Should be t('results.insufficient_credits_toast') or similar for i18n consistency with the rest of the app (which is fully translated PT/EN).",
+    "backend/tests structure — pytest.ini uses -n 2 --dist loadscope; test_critical_reading.py has cross-class shared assumptions on wallet balance. Currently safe because 402 test doesn't debit and Ownership test's chapter analyze doesn't debit, but future contributors should be warned in the module docstring. Consider adding a session-scoped 'wallet_balance_isolation' fixture that snapshots+restores or serializes credit-affecting classes."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_critical_reading.py (NEW — 10 pytest cases covering critical_reading endpoint end-to-end: auth guard, successful run with 5 real Claude checks, contextual finding assertion, exact wallet debit, credit_transactions row, GET persistence, idempotency, 402 insufficient balance with no side effects, cross-user ownership 404)"
+  ],
+  "success_rate": {"backend": "100% (10/10 pytest)", "frontend": "100% (all critical reading UI steps passed)"},
+  "test_credentials": "demo.escritor@cowriter.test / CoWriter#2026 (wallet went 3 → 2 → 1 credits during this run; 1 credit consumed by backend test, 1 credit consumed by UI test — 2 real Claude critical-reading calls total)",
+  "seed_data_creation": "2 fresh test chapters were created (one via backend test, one for the UI test with analysis_run_id 85a8ad57-a3f2-426e-be62-b7921a38c136 in project 33414333-464b-4d6e-9db7-d74ee0393b51). Each triggered exactly 1 real Anthropic API call (5 parallel Claude Sonnet 5 messages ~1-4k tokens each). Additionally a large ~4-credit chapter was created for the 402 test (no Claude call — short-circuited on balance check).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Fase 4 is production-ready and fully wired. Wallet balance for demo user is now 1 credit — main agent should top it up (via direct SQL or add a credit_grant endpoint) before running further critical_reading tests, otherwise 402 will fire on any chapter >1000 words. The critical_reading endpoint returns HTTPException(402, dict) which FastAPI wraps under 'detail' — see code review comment #1. Idempotency check happens outside the DB transaction; not a functional bug today but a race condition risk (comment #2). ANTHROPIC_MODEL=claude-sonnet-5 in backend/.env is confirmed live; the 5 checks produce real Portuguese analyses referencing the actual scene content. Fase 5 (PDF export) and Fase 6 (payments/top-up) not yet built — main agent's next backlog. The non-PT/EN fallback for checks 1-3/5 is intentionally deferred per problem statement — do NOT report as bug.",
+  "rca of the issue": "N/A — no bugs. All primary success criteria and edge cases (idempotency, 402, ownership, persistence, contextual AI output) verified with real Claude API calls."
+}

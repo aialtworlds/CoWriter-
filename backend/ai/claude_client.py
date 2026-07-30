@@ -1,14 +1,14 @@
 import os
-from anthropic import Anthropic
+from anthropic import AsyncAnthropic
 
 
 class ClaudeClient:
     def __init__(self):
-        self.client = Anthropic(api_key=os.environ['ANTHROPIC_API_KEY'])
+        self.client = AsyncAnthropic(api_key=os.environ['ANTHROPIC_API_KEY'])
         self.model = os.environ.get('ANTHROPIC_MODEL', 'claude-sonnet-5')
 
-    def generate(self, system: str, prompt: str, max_tokens: int = 1024) -> str:
-        msg = self.client.messages.create(
+    async def generate(self, system: str, prompt: str, max_tokens: int = 1024) -> str:
+        msg = await self.client.messages.create(
             model=self.model,
             max_tokens=max_tokens,
             system=system,

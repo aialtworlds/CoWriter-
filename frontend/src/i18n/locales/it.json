@@ -67,7 +67,8 @@
     "occurrences": "{{count}} occorrenza/e",
     "no_issues": "Nessun problema trovato in questo check.",
     "credits_used": "Crediti consumati in questa analisi",
-    "words_analyzed": "Parole analizzate"
+    "words_analyzed": "Parole analizzate",
+    "run_critical_button": "Esegui Lettura Critica"
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -77,7 +78,12 @@
     "sensory_rotation": "Rotazione Sensoriale",
     "filter_words": "Parole Filtro",
     "dialogue_tag_variety": "Varietà dei Verbi Dichiarativi",
-    "paragraph_opening_monotony": "Monotonia di Apertura del Paragrafo"
+    "paragraph_opening_monotony": "Monotonia di Apertura del Paragrafo",
+    "scene_objective": "Obiettivo di Scena",
+    "scene_magnetism": "Magnetismo di Scena",
+    "linger_cortar": "Linger / Taglio",
+    "subtext_frame": "Sottotesto nei Dialoghi",
+    "voiceprint_pov_filter": "Voiceprint / Filtro POV"
   },
   "wallet": {
     "balance": "Saldo",

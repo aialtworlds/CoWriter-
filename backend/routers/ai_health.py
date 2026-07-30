@@ -8,7 +8,7 @@ router = APIRouter()
 @router.get('/ai/ping')
 async def ai_ping(user=Depends(current_user)):
     try:
-        resposta = claude.generate(
+        resposta = await claude.generate(
             system='Responda apenas com a palavra pedida, sem explicações.',
             prompt='Responda exatamente: OK',
             max_tokens=16,

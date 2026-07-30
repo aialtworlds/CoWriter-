@@ -5,6 +5,7 @@ from auth import current_user
 from database import get_pool
 from checks.helpers import count_words
 from checks.runner import run_deterministic_checks
+from ai.judgment_checks import run_judgment_checks
 from routers.chapters import _assert_chapter_owner, _assert_project_owner
 
 router = APIRouter()
@@ -80,7 +81,89 @@ async def analyze_chapter(chapter_id: str, user=Depends(current_user)):
         'palavras_analisadas': palavras,
         'creditos_consumidos': 0,
         'fatos': resultados,
-        'leitura_critica': {'status': 'em_breve', 'mensagem': 'Checks de julgamento de IA chegam na próxima fase.'},
+        'leitura_critica': [],
+        'leitura_critica_executada': False,
+    }
+
+
+async def _assert_analysis_run_owner(pool, analysis_run_id: str, user_id: str):
+    run_row = await pool.fetchrow(
+        "SELECT a.id, a.chapter_id, a.\"timestamp\", a.palavras_analisadas, a.creditos_consumidos, "
+        "c.texto_bruto, c.idioma_detectado, p.idioma as project_idioma "
+        "FROM analysis_runs a JOIN chapters c ON c.id = a.chapter_id JOIN projects p ON p.id = c.project_id "
+        "WHERE a.id=$1 AND p.user_id=$2",
+        analysis_run_id, user_id,
+    )
+    if not run_row:
+        raise HTTPException(404, 'Análise não encontrada')
+    return run_row
+
+
+@router.post('/analysis_runs/{analysis_run_id}/critical_reading', status_code=201)
+async def run_critical_reading(analysis_run_id: str, user=Depends(current_user)):
+    pool = get_pool()
+    run_row = await _assert_analysis_run_owner(pool, analysis_run_id, user['sub'])
+
+    existing = await pool.fetch(
+        "SELECT check_type, numero, tipo, confiabilidade, score, contagem, detalhes_json FROM check_results "
+        "WHERE analysis_run_id=$1 AND tipo='julgamento' ORDER BY numero",
+        analysis_run_id,
+    )
+    if existing:
+        leitura_critica = []
+        for c in existing:
+            item = dict(c)
+            item['detalhes'] = json.loads(item.pop('detalhes_json'))
+            leitura_critica.append(item)
+        return {
+            'analysis_run_id': analysis_run_id,
+            'creditos_consumidos': float(run_row['creditos_consumidos']),
+            'leitura_critica': leitura_critica,
+            'ja_executada': True,
+        }
+
+    palavras = run_row['palavras_analisadas']
+    creditos_necessarios = math.ceil(palavras / WORDS_PER_CREDIT) if palavras else 0
+    idioma = run_row['idioma_detectado'] or run_row['project_idioma']
+
+    wallet = await pool.fetchrow("SELECT saldo_creditos FROM credit_wallet WHERE user_id=$1", user['sub'])
+    saldo = float(wallet['saldo_creditos']) if wallet else 0
+    if saldo < creditos_necessarios:
+        raise HTTPException(402, {
+            'erro': 'saldo_insuficiente',
+            'necessario': creditos_necessarios,
+            'saldo': saldo,
+        })
+
+    resultados = await run_judgment_checks(run_row['texto_bruto'], idioma)
+
+    async with pool.acquire() as conn:
+        async with conn.transaction():
+            for r in resultados:
+                await conn.execute(
+                    "INSERT INTO check_results (analysis_run_id, check_type, numero, tipo, confiabilidade, score, contagem, detalhes_json) "
+                    "VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+                    analysis_run_id, r['check_type'], r['numero'], r['tipo'], r['confiabilidade'],
+                    r['score'], r['contagem'], json.dumps(r['detalhes']),
+                )
+            await conn.execute(
+                "UPDATE analysis_runs SET creditos_consumidos = creditos_consumidos + $1 WHERE id=$2",
+                creditos_necessarios, analysis_run_id,
+            )
+            await conn.execute(
+                "INSERT INTO credit_transactions (user_id, tipo, quantidade, referencia_id) VALUES ($1, 'consumo', $2, $3)",
+                user['sub'], -creditos_necessarios, analysis_run_id,
+            )
+            await conn.execute(
+                "UPDATE credit_wallet SET saldo_creditos = saldo_creditos - $1, atualizado_em = now() WHERE user_id=$2",
+                creditos_necessarios, user['sub'],
+            )
+
+    return {
+        'analysis_run_id': analysis_run_id,
+        'creditos_consumidos': creditos_necessarios,
+        'leitura_critica': resultados,
+        'ja_executada': False,
     }
 
 
@@ -101,12 +184,18 @@ async def get_analysis_run(analysis_run_id: str, user=Depends(current_user)):
         analysis_run_id,
     )
     fatos = []
+    leitura_critica = []
     for c in checks:
         item = dict(c)
         item['detalhes'] = json.loads(item.pop('detalhes_json'))
-        fatos.append(item)
+        if item['tipo'] == 'julgamento':
+            leitura_critica.append(item)
+        else:
+            fatos.append(item)
     result = dict(run_row)
     result['fatos'] = fatos
+    result['leitura_critica'] = leitura_critica
+    result['leitura_critica_executada'] = len(leitura_critica) > 0
     return result
 
 

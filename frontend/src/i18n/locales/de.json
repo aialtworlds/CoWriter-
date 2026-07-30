@@ -67,7 +67,8 @@
     "occurrences": "{{count}} Vorkommen",
     "no_issues": "Keine Probleme in diesem Check gefunden.",
     "credits_used": "Verbrauchtes Guthaben in dieser Analyse",
-    "words_analyzed": "Analysierte Wörter"
+    "words_analyzed": "Analysierte Wörter",
+    "run_critical_button": "Kritische Lektüre starten"
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -77,7 +78,12 @@
     "sensory_rotation": "Sensorische Rotation",
     "filter_words": "Filterwörter",
     "dialogue_tag_variety": "Vielfalt der Redebegleitsätze",
-    "paragraph_opening_monotony": "Monotonie der Absatzanfänge"
+    "paragraph_opening_monotony": "Monotonie der Absatzanfänge",
+    "scene_objective": "Szenenziel",
+    "scene_magnetism": "Szenenmagnetismus",
+    "linger_cortar": "Linger / Schnitt",
+    "subtext_frame": "Subtext in Dialogen",
+    "voiceprint_pov_filter": "Voiceprint / POV-Filter"
   },
   "wallet": {
     "balance": "Guthaben",
