@@ -1,0 +1,76 @@
+{
+  "theme_and_archetype": "Earthy Dark Luxury (Archetype 5 + Archetype 1 hybrid)",
+  "colors": {
+    "background": "#0C0C0E",
+    "surface": "#121215",
+    "text": "#E6E4DD",
+    "ui_text": "#F4F4F5",
+    "primary_button": "#FFFFFF",
+    "primary_button_text": "#000000",
+    "deterministic_fact_green": "#34D399",
+    "ai_judgment_yellow": "#FBBF24",
+    "info_gray": "#9CA3AF",
+    "banned_colors": ["#7351B7", "#1B93A4"]
+  },
+  "typography": {
+    "headings": "Manrope, sans-serif",
+    "body_ui": "Manrope, sans-serif",
+    "chapter_text": "Lora, serif",
+    "monospace": "JetBrains Mono, monospace",
+    "rules": "Never use Inter for headings. Keep chapter text width constrained (max-w-3xl) for comfortable reading. Use tracking-tight for large headings."
+  },
+  "visual enhancers": {
+    "surfaces": "Use 1px subtle borders (border-white/5) to separate dark elements instead of heavy shadows.",
+    "glassmorphism": "For sticky headers: backdrop-blur-xl bg-[#0C0C0E]/80 border-b border-white/5.",
+    "icons": "lucide-react with 1.5px stroke width."
+  },
+  "layouts": {
+    "dashboard_grid": "Bento layout with distinct cards for Projects, Rules, and Credits. Gap-6 or gap-8.",
+    "editor_desktop": "2-column grid. Left: col-span-8 or 7 (Editor text). Right: col-span-4 or 5 (Analysis).",
+    "editor_mobile": "Single column layout. Bottom fixed tabs to switch between Editor and Analysis."
+  },
+  "components": {
+    "credit_counter": "Pill shape in header: rounded-full border border-white/10 bg-white/5 px-4 py-1.5 font-mono text-sm tracking-tight text-white.",
+    "text_highlights": "Inline spans with subtle bg and bottom border. Fact: bg-emerald-500/20 border-b border-emerald-500/50. AI: bg-amber-500/20 border-b border-amber-500/50.",
+    "analysis_tabs": "Shadcn Tabs. Fatos (Green) vs Leitura Crítica (Yellow).",
+    "sticky_disclaimer": "Placed inside 'Leitura Crítica' tab: bg-amber-500/10 text-amber-400 p-3 rounded border border-amber-500/20 text-xs. Content: 'Isto é uma leitura possível, não um veredito'.",
+    "reliability_badge": "Flex row with icon. Verified (PT/EN): text-emerald-400. Generic: text-amber-400.",
+    "confirmation_modal": "Shadcn Dialog. Dark surface bg-[#121215]. Clear typography displaying credit cost before analysis.",
+    "bottom_tabs": "For mobile only. Fixed at bottom. Icons + text labels."
+  },
+  "motion": {
+    "hover": "Buttons and cards must have background and border color transitions (duration-200).",
+    "tabs": "Use framer-motion for smooth tab underline sliding.",
+    "modal": "Scale and fade-in entrance for the confirmation modal."
+  },
+  "accessibility": {
+    "contrast": "Ensure all text on the #0C0C0E background meets APCA standards. Do not use pure black backgrounds.",
+    "focus": "All interactive elements must have a visible focus ring (focus:ring-2 focus:ring-white/50)."
+  },
+  "image_urls": {
+    "auth_background": {
+      "url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwxfHxkYXJrJTIwYWJzdHJhY3QlMjB0ZXh0dXJlfGVufDB8fHx8MTc4NTMwODk2MHww&ixlib=rb-4.1.0&q=85",
+      "description": "Dark abstract texture, ideal for an auth screen split layout or hero section background.",
+      "category": "backgrounds"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Strictly apply Dark Mode design. The entire app should have a very dark gray (#0C0C0E) body background.",
+    "Import Lora and Manrope from Google Fonts in index.css.",
+    "Build a fixed global header that contains the Credit Counter.",
+    "Ensure the editor area focuses on typography and spacing. No bounding boxes around the chapter text itself.",
+    "Implement language selector in the UI (PT-BR, PT-PT, EN, ES, IT, FR, DE).",
+    "The analysis right-sidebar must have two primary tabs. In the Leitura Crítica tab, the disclaimer is mandatory.",
+    "Mock the credit deduction flow: Click Analyze -> Show Confirmation Modal with Cost -> Click Confirm -> Mock Loading -> Show Results -> Deduct Credits in header.",
+    "All interactive elements MUST have `data-testid` attributes."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Do not converge toward generic outputs. Use layered design elements with z-index hierarchy.",
+    "No centered layouts for dense information. Left-align text for readability.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Use modern pill-shaped or slightly rounded buttons with explicit hover/active states.",
+    "Never use generic AI emojis for icons.",
+    "Prioritize Shadcn components; override their fixed heights where content needs to flow.",
+    "Include micro-animations for all interactive state changes."
+  ]
+}
