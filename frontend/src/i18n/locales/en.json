@@ -1,0 +1,95 @@
+{
+  "app": { "name": "CoWriter", "tagline": "Intelligent fiction chapter revision" },
+  "auth": {
+    "login_title": "Log in",
+    "signup_title": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "login_button": "Log in",
+    "signup_button": "Create account",
+    "google_button": "Continue with Google",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "signup_link": "Create one",
+    "login_link": "Log in",
+    "error_invalid": "Invalid email or password",
+    "welcome_bonus": "Get 5,000 bonus words when you sign up — no card needed.",
+    "check_email": "Check your email to confirm your account."
+  },
+  "nav": { "dashboard": "Projects", "credits": "Credits", "logout": "Log out", "history": "History" },
+  "dashboard": {
+    "title": "My Projects",
+    "new_project": "New Project",
+    "empty": "You have no projects yet. Create the first one!",
+    "project_name": "Project name",
+    "language": "Text language",
+    "genre": "Genre (optional)",
+    "create": "Create Project",
+    "cancel": "Cancel",
+    "open": "Open",
+    "delete": "Delete project"
+  },
+  "project": {
+    "chapters": "Chapters",
+    "new_chapter": "New Chapter",
+    "history": "History",
+    "credit_statement": "Credit Statement",
+    "empty_chapters": "No chapters yet. Paste or upload the first one.",
+    "back_to_projects": "Back to projects"
+  },
+  "chapter": {
+    "title_label": "Chapter title",
+    "paste_text": "Paste text",
+    "upload_file": "Upload file (.docx, .txt, .md)",
+    "word_count": "{{count}} words",
+    "analyze": "Analyze Chapter",
+    "analyzing": "Analyzing...",
+    "save_and_analyze": "Save and Analyze",
+    "drop_hint": "Drag a .docx, .txt or .md file, or click to select"
+  },
+  "modal": {
+    "confirm_title": "Confirm analysis",
+    "confirm_body": "This chapter has {{words}} words.",
+    "cost_facts": "Checks 1–8 (Facts): free and unlimited.",
+    "cost_ai": "Critical Reading (AI): would cost {{credits}} credits. Current balance: {{balance}}.",
+    "confirm_button": "Confirm and Analyze",
+    "cancel_button": "Cancel"
+  },
+  "results": {
+    "facts_tab": "Facts",
+    "critical_tab": "Critical Reading",
+    "disclaimer": "This is a possible reading, not a verdict.",
+    "coming_soon": "AI judgment checks (9–14) are coming in the next phase.",
+    "verified_badge": "verified",
+    "generic_badge": "generic",
+    "copy_suggestion": "Copy suggestion",
+    "copied": "Copied!",
+    "occurrences": "{{count}} occurrence(s)",
+    "no_issues": "No issues found in this check.",
+    "credits_used": "Credits used in this analysis",
+    "words_analyzed": "Words analyzed"
+  },
+  "checks": {
+    "ai_fingerprint": "AI Fingerprint Scan",
+    "gesture_cooldown": "Gesture Cooldown",
+    "descriptor_cooldown": "Descriptor Cooldown",
+    "prose_rhythm": "Prose Rhythm",
+    "sensory_rotation": "Sensory Rotation",
+    "filter_words": "Filter Words",
+    "dialogue_tag_variety": "Dialogue Tag Variety",
+    "paragraph_opening_monotony": "Paragraph-Opening Monotony"
+  },
+  "wallet": {
+    "balance": "Balance",
+    "credits": "credits",
+    "statement_title": "Credit Statement",
+    "date": "Date",
+    "type": "Type",
+    "amount": "Amount",
+    "bonus_inicial": "Initial bonus",
+    "compra_pacote": "Package purchase",
+    "consumo": "Consumption",
+    "empty": "No transactions yet."
+  },
+  "common": { "loading": "Loading...", "save": "Save", "delete": "Delete", "back": "Back", "language_selector": "Interface language" }
+}

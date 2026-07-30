@@ -1,0 +1,11 @@
+{
+  "short_name": "CoWriter",
+  "name": "CoWriter — Editor Assistente de Ficção",
+  "icons": [
+    { "src": "favicon.ico", "sizes": "64x64 32x32 24x24 16x16", "type": "image/x-icon" }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0C0C0E",
+  "background_color": "#0C0C0E"
+}

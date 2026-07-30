@@ -1,0 +1,44 @@
+{
+  "summary": "First testing pass for CoWriter V1 Fase 1+2 (Portuguese fiction chapter revision app). Backend + Frontend fully verified. Backend: 15/15 pytest cases pass including auth requirement, wallet bonus, projects CRUD w/ persistence, chapter+estimate+analyze flow with correct check firing (gesture_cooldown 4x, filter_words, sensory_rotation), analysis run retrieval, project history, and CRITICALLY the RLS/ownership boundary test — user B cannot fetch user A's project/chapter/analysis_run (all correctly return 404, not 200). Frontend: login/logout, header (credit pill=5, history link, i18n selector), dashboard project create, project detail (name/lang/genre, empty state), new chapter (title, textarea, live word count, save-and-analyze), confirmation modal (word count=43, free-1-8 box, 'would cost 1 credit / balance 5' box, confirm button), analysis result desktop 2-column layout renders all 8 check cards with reliability badges + highlighted excerpts + 7 copy-suggestion buttons, critical-reading tab shows disclaimer + coming-soon (no AI call — correct for phase), credit statement page shows 'Initial bonus +5' tx, language switch to English works live, mobile 375px layout shows 'Capítulo'/'Análise' tabs. Credit balance correctly UNCHANGED after analysis (creditos_consumidos=0 for free checks 1-8). PWA: manifest.json 200 OK, service worker registered. Signup UI + error/success toast handling verified (Supabase returns invalid-email for @cowriter.test domain and stays on /signup with no session/toast for @yopmail.com — expected email-confirmation flow).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Confirmation modal (AnalysisConfirmModal)", "issues": ["Dialog contains both a 'Cancel' button and the shadcn default 'Close' X — small UX redundancy, not a bug"]},
+      {"screen": "Confirmation modal", "issues": ["Console warning: 'Missing Description or aria-describedby for {DialogContent}' — a11y warning, add DialogDescription to the shadcn Dialog"]},
+      {"screen": "Analysis result page", "issues": ["[data-testid=\"mobile-result-tabs\"] and [data-testid=\"results-panel\"]/[data-testid=\"chapter-text-panel\"] appear twice in DOM (once inside desktop 'hidden lg:grid' block and once inside mobile 'lg:hidden' block). Both instances share the same testid which is technically non-unique. Consider suffixing '-desktop'/'-mobile' or rendering only one branch."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Optional a11y: add <DialogDescription> to AnalysisConfirmModal to silence the aria-describedby console warning.",
+    "Optional: make [data-testid=\"chapter-text-panel\"], [data-testid=\"results-panel\"], and [data-testid=\"analysis-result\"] unique per layout branch (desktop vs mobile Tabs) — they currently render twice in DOM.",
+    "Signup with @cowriter.test domain is rejected by Supabase project's anti-abuse (returns 400 'email is invalid'). Not a bug in app code, but if you want to allow that domain for demos, disable/loosen the Supabase abuse settings for the project.",
+    "No blockers — the app is ready for Fase 3+."
+  ],
+  "critical_code_review_comments": [
+    "Backend: /api/auth.py falls back to HS256 with SUPABASE_JWT_SECRET but env var is empty — currently the ES256 JWKS path is used and works. If Supabase ever rotates to HS-only-signed JWTs, backend will 500 with 'Auth not configured'. Consider explicitly documenting or removing the HS fallback since Supabase modern issues ES256 by default.",
+    "Backend: /api/projects DELETE 204 has no HTTPException guard when result=='DELETE 0' in delete_chapter (only projects has the guard). Currently delete_chapter always returns 204 even for non-existent chapter of the same owner — but _assert_chapter_owner runs first and raises 404, so it is actually safe. No action.",
+    "Backend: analysis.py analyze_chapter reads chapter['project_idioma'] which is aliased from a JOIN, but detect_lang result on chapters is stored — good. Suggestion: cache analysis results to avoid re-running deterministic checks on the same texto_bruto hash.",
+    "Frontend ChapterResult.jsx duplicates the analysis-result testid across desktop/mobile — minor testability nit.",
+    "Frontend Signup.jsx: no client-side email format hint when Supabase rejects the domain — the toast just shows Supabase's raw message which is acceptable but not translated.",
+    "Frontend Header.jsx: credit counter and 'History' link both point to /credits — that is intentional but the two clickable elements share the same destination; consider only one entry point to reduce redundancy."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py"
+  ],
+  "success_rate": {"backend": "100% (15/15 pytest)", "frontend": "100% of in-scope flows verified"},
+  "test_credentials": "demo.escritor@cowriter.test / CoWriter#2026 (primary, 5-credit bonus). demo.escritor2@cowriter.test / CoWriter#2026 (created via Supabase Admin API for RLS boundary test — main agent may keep or delete).",
+  "seed_data_creation": "Created a second Supabase user 'demo.escritor2@cowriter.test' (id: 0137d899-f66d-420c-bb9e-cf6c8fb3597b) with email_confirm=true via Supabase Admin API for RLS ownership testing. Also multiple TEST_-prefixed projects/chapters/analysis_runs were created under demo.escritor@cowriter.test during pytest and UI runs — main agent may cleanup these test rows if desired (safe to leave; each test class creates fresh rows and boundaries are enforced).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Preview URL: https://cowriter-ai.preview.emergentagent.com. Regression suite is /app/backend/tests/backend_test.py with a session-scoped Supabase login for both users (auto-skips if login fails). Existing analyzed chapters live under the demo.escritor@cowriter.test account so subsequent UI runs can click 'Ver análise' instead of re-analyzing. If retesting mobile layout, note that /analysis/:id uses two DOM branches (desktop grid + mobile Tabs) — the same data-testids exist in both; wait for at least one to be visible with a specific role. Google OAuth remains untested end-to-end (button exists, no crash on click). ANTHROPIC_API_KEY still empty — the 'Critical Reading' tab is intentionally a placeholder for Fase 4.",
+  "rca of the issue": "No functional bugs found requiring RCA. The only two initial 'issues' during exploratory Playwright turned out to be timing races (I queried elements before their useEffect-fetched data arrived): (a) empty project-detail-name — resolved after waiting ~1.5s for GET /api/projects/{id}; (b) empty results-panel — resolved after waiting for [data-testid='analysis-result'] to appear after GET /api/analysis_runs/{id} + GET /api/chapters/{id} sequential calls. Real users don't see this because the UI renders skeleton/empty state until data arrives, and the data is available within a few hundred ms."
+}

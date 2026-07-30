@@ -1,0 +1,95 @@
+{
+  "app": { "name": "CoWriter", "tagline": "Revisión inteligente de capítulos de ficción" },
+  "auth": {
+    "login_title": "Iniciar sesión",
+    "signup_title": "Crear cuenta",
+    "email": "Correo",
+    "password": "Contraseña",
+    "login_button": "Entrar",
+    "signup_button": "Crear cuenta",
+    "google_button": "Continuar con Google",
+    "no_account": "¿No tienes cuenta?",
+    "have_account": "¿Ya tienes cuenta?",
+    "signup_link": "Crear una",
+    "login_link": "Entrar",
+    "error_invalid": "Correo o contraseña inválidos",
+    "welcome_bonus": "Recibe 5.000 palabras de bono al crear tu cuenta — sin tarjeta.",
+    "check_email": "Revisa tu correo para confirmar la cuenta."
+  },
+  "nav": { "dashboard": "Proyectos", "credits": "Créditos", "logout": "Salir", "history": "Historial" },
+  "dashboard": {
+    "title": "Mis Proyectos",
+    "new_project": "Nuevo Proyecto",
+    "empty": "Aún no tienes proyectos. ¡Crea el primero!",
+    "project_name": "Nombre del proyecto",
+    "language": "Idioma del texto",
+    "genre": "Género (opcional)",
+    "create": "Crear Proyecto",
+    "cancel": "Cancelar",
+    "open": "Abrir",
+    "delete": "Eliminar proyecto"
+  },
+  "project": {
+    "chapters": "Capítulos",
+    "new_chapter": "Nuevo Capítulo",
+    "history": "Historial",
+    "credit_statement": "Extracto de Créditos",
+    "empty_chapters": "Aún no hay capítulos. Pega o sube el primero.",
+    "back_to_projects": "Volver a proyectos"
+  },
+  "chapter": {
+    "title_label": "Título del capítulo",
+    "paste_text": "Pegar texto",
+    "upload_file": "Subir archivo (.docx, .txt, .md)",
+    "word_count": "{{count}} palabras",
+    "analyze": "Analizar Capítulo",
+    "analyzing": "Analizando...",
+    "save_and_analyze": "Guardar y Analizar",
+    "drop_hint": "Arrastra un archivo .docx, .txt o .md, o haz clic para seleccionar"
+  },
+  "modal": {
+    "confirm_title": "Confirmar análisis",
+    "confirm_body": "Este capítulo tiene {{words}} palabras.",
+    "cost_facts": "Checks 1–8 (Hechos): gratis e ilimitados.",
+    "cost_ai": "Lectura Crítica (IA): costaría {{credits}} créditos. Saldo actual: {{balance}}.",
+    "confirm_button": "Confirmar y Analizar",
+    "cancel_button": "Cancelar"
+  },
+  "results": {
+    "facts_tab": "Hechos",
+    "critical_tab": "Lectura Crítica",
+    "disclaimer": "Esta es una lectura posible, no un veredicto.",
+    "coming_soon": "Los checks de juicio de IA (9–14) llegan en la próxima fase.",
+    "verified_badge": "verificado",
+    "generic_badge": "genérico",
+    "copy_suggestion": "Copiar sugerencia",
+    "copied": "¡Copiado!",
+    "occurrences": "{{count}} ocurrencia(s)",
+    "no_issues": "No se encontraron problemas en este check.",
+    "credits_used": "Créditos consumidos en este análisis",
+    "words_analyzed": "Palabras analizadas"
+  },
+  "checks": {
+    "ai_fingerprint": "AI Fingerprint Scan",
+    "gesture_cooldown": "Enfriamiento de Gestos",
+    "descriptor_cooldown": "Enfriamiento de Descriptores",
+    "prose_rhythm": "Ritmo de la Prosa",
+    "sensory_rotation": "Rotación Sensorial",
+    "filter_words": "Palabras Filtro",
+    "dialogue_tag_variety": "Variedad de Marcadores de Diálogo",
+    "paragraph_opening_monotony": "Monotonía de Apertura de Párrafo"
+  },
+  "wallet": {
+    "balance": "Saldo",
+    "credits": "créditos",
+    "statement_title": "Extracto de Créditos",
+    "date": "Fecha",
+    "type": "Tipo",
+    "amount": "Cantidad",
+    "bonus_inicial": "Bono inicial",
+    "compra_pacote": "Compra de paquete",
+    "consumo": "Consumo",
+    "empty": "Aún no hay transacciones."
+  },
+  "common": { "loading": "Cargando...", "save": "Guardar", "delete": "Eliminar", "back": "Volver", "language_selector": "Idioma de la interfaz" }
+}
