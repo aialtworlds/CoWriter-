@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './ui/dialog';
 import { Button } from './ui/button';
 
 export function AnalysisConfirmModal({ open, onOpenChange, estimate, onConfirm, loading }) {
@@ -11,6 +11,9 @@ export function AnalysisConfirmModal({ open, onOpenChange, estimate, onConfirm, 
       <DialogContent data-testid="analysis-confirm-modal" className="bg-[#121215] border-white/10 text-[#E6E4DD]">
         <DialogHeader>
           <DialogTitle className="text-[#F4F4F5]">{t('modal.confirm_title')}</DialogTitle>
+          <DialogDescription className="text-[#9CA3AF]">
+            {t('modal.confirm_body', { words: estimate.palavras })}
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-3 text-sm">
           <p className="text-base" data-testid="analysis-word-count">

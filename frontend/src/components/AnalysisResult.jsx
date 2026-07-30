@@ -55,12 +55,12 @@ function CheckCard({ check }) {
   );
 }
 
-export function AnalysisResult({ analysis }) {
+export function AnalysisResult({ analysis, idSuffix = '' }) {
   const { t } = useTranslation();
   if (!analysis) return null;
 
   return (
-    <div data-testid="analysis-result" className="space-y-4">
+    <div data-testid={`analysis-result${idSuffix ? `-${idSuffix}` : ''}`} className="space-y-4">
       <div className="flex items-center gap-4 text-xs text-[#9CA3AF]">
         <span data-testid="analysis-words-analyzed">{t('results.words_analyzed')}: {analysis.palavras_analisadas}</span>
         <span data-testid="analysis-credits-used">{t('results.credits_used')}: {analysis.creditos_consumidos}</span>

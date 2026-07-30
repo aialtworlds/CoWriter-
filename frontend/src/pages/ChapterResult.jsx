@@ -20,22 +20,22 @@ export default function ChapterResult() {
     });
   }, [analysisRunId]);
 
-  const ChapterText = (
-    <div className="rounded-xl border border-white/5 bg-[#121215] p-6" data-testid="chapter-text-panel">
+  const buildChapterText = (suffix) => (
+    <div className="rounded-xl border border-white/5 bg-[#121215] p-6" data-testid={`chapter-text-panel-${suffix}`}>
       <h2 className="font-medium text-[#F4F4F5] mb-4">{chapter?.titulo}</h2>
       <div
         className="whitespace-pre-wrap leading-relaxed text-[#E6E4DD] max-w-3xl"
         style={{ fontFamily: 'Lora, serif', fontSize: '1.05rem' }}
-        data-testid="chapter-text-content"
+        data-testid={`chapter-text-content-${suffix}`}
       >
         {chapter?.texto_bruto}
       </div>
     </div>
   );
 
-  const ResultsPanel = (
-    <div data-testid="results-panel">
-      <AnalysisResult analysis={analysis} />
+  const buildResultsPanel = (suffix) => (
+    <div data-testid={`results-panel-${suffix}`}>
+      <AnalysisResult analysis={analysis} idSuffix={suffix} />
     </div>
   );
 
@@ -46,8 +46,8 @@ export default function ChapterResult() {
       </Link>
 
       <div className="hidden lg:grid grid-cols-12 gap-8">
-        <div className="col-span-7">{ChapterText}</div>
-        <div className="col-span-5">{ResultsPanel}</div>
+        <div className="col-span-7">{buildChapterText('desktop')}</div>
+        <div className="col-span-5">{buildResultsPanel('desktop')}</div>
       </div>
 
       <div className="lg:hidden">
@@ -56,8 +56,8 @@ export default function ChapterResult() {
             <TabsTrigger value="texto" data-testid="mobile-tab-texto">Capítulo</TabsTrigger>
             <TabsTrigger value="analise" data-testid="mobile-tab-analise">Análise</TabsTrigger>
           </TabsList>
-          <TabsContent value="texto" className="mt-4">{ChapterText}</TabsContent>
-          <TabsContent value="analise" className="mt-4">{ResultsPanel}</TabsContent>
+          <TabsContent value="texto" className="mt-4">{buildChapterText('mobile')}</TabsContent>
+          <TabsContent value="analise" className="mt-4">{buildResultsPanel('mobile')}</TabsContent>
         </Tabs>
       </div>
     </div>
