@@ -17,6 +17,9 @@ Web app responsivo (PWA) chamado CoWriter — editor assistente de ficção foca
 ## Core Requirements (static)
 See full spec in conversation history — 14 checks, credit-based monetization (no subscription), Supabase Auth + Postgres + RLS, i18n from day 1, PWA, dark mode.
 
+## Implemented (as of 2026-07-30, updated same day)
+- **Fase 3 — Minhas Regras**: full CRUD for `banned_patterns` (frase/gesto/descritor/estrutura), scoped per-project or global, import (multi-line paste) + export (.txt), `disparos_count` auto-increments atomically during analysis. Integrated into checks: frase+estrutura → check 1 (ai_fingerprint), gesto → check 2 (custom cooldown_max), descritor → check 3 (custom cooldown_max). 33/33 backend tests pass (18 new + 15 regression), full frontend flow verified.
+
 ## Implemented (as of 2026-07-30)
 - **Fase 1 — Fundação**: Supabase Auth (email/password working end-to-end incl. Google OAuth wired but not E2E-testable), Postgres schema + RLS policies + ownership triggers, CRUD projetos/capítulos, paste + upload (.docx/.txt/.md via mammoth), PWA manifest+SW, react-i18next 7 locales with browser-language auto-detect + manual selector, `credit_wallet`/`credit_transactions` with global header counter, 5,000-word signup bonus via DB trigger.
 - **Fase 2 — Checks Determinísticos (1-8)**: all 8 implemented (ai_fingerprint, gesture_cooldown, descriptor_cooldown, prose_rhythm, sensory_rotation, filter_words, dialogue_tag_variety, paragraph_opening_monotony), free/unlimited, "Fatos" section with highlighted excerpts + suggestions + copy button, reliability badges (verificado pt/en, genérico es/it/fr/de).
@@ -24,7 +27,6 @@ See full spec in conversation history — 14 checks, credit-based monetization (
 - Tested: 15/15 backend pytest cases pass, RLS/ownership boundary verified secure (cross-user 404s confirmed), full frontend flow verified via testing agent (login→project→chapter→analyze→result→history→statement, i18n switch, mobile layout).
 
 ## Backlog (prioritized)
-- **P0 (Fase 3)**: Minhas Regras (banned_patterns CRUD, per-project/global scope, import/export texto simples, contador de disparos, integração com checks determinísticos).
 - **P0 (Fase 4)**: Checks de IA 9-14 via Anthropic (needs user's `ANTHROPIC_API_KEY` + prompts user said they'd provide), transactional credit debit + analysis_run insert, insufficient-balance block + purchase CTA, non-PT/EN fallback to ⚠️ AI judgment for checks 1-3/5.
 - **P1 (Fase 5)**: Export relatório .md/.pdf (ReportLab), PDF to Supabase Storage.
 - **P1 (Fase 6)**: Stripe (USD) + Mercado Pago (BRL/Pix) package purchase, webhooks with idempotent crediting via `external_id`.
