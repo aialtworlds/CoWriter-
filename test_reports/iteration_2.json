@@ -1,0 +1,31 @@
+{
+  "summary": "Config-fix verification for Google OAuth (Supabase provider enable). Verified 3 things: (1) curl GET {SUPABASE_URL}/auth/v1/settings with anon apikey now returns external.google=true (previously false). (2) On /login, clicking [data-testid=login-google-button] issues a 302 to https://cexplgtcimdezzxuimkv.supabase.co/auth/v1/authorize?provider=google&redirect_to=.../dashboard which then cleanly lands on https://accounts.google.com/v3/signin/identifier (real Google Sign-In screen showing 'to continue to cexplgtcimdezzxuimkv.supabase.co'). No 'Unsupported provider' / 'provider is not enabled' text in the page body, no 4xx/5xx response from Supabase auth endpoints. (3) Same clean redirect verified on /signup via [data-testid=signup-google-button]. Regression: email/password login with demo.escritor@cowriter.test / CoWriter#2026 still works — reached /dashboard, header renders 'CoWriter | 5 credits | History | language selector | logout' and the 6 existing projects load correctly. UNVERIFIABLE BY AUTOMATION: the final step of Google OAuth (choosing a real Google account, consenting, and being redirected back to /dashboard with a Supabase session) cannot be tested by any automated agent — it requires an interactive real Google account. All observable evidence up to that boundary shows the fix is correct.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/iteration_1.json"
+  ],
+  "action_items": [
+    "None. Google OAuth provider fix is verified up to the Google consent screen. Only interactive human testing with a real Google account can validate the final callback → session → /dashboard hop; recommend main agent ask the user to run that one manual click test.",
+    "OAuth client id observed in Google redirect: 167809373098-cahkr5llcf60af7eqt013djoao4ngkpm.apps.googleusercontent.com — matches user's Google Cloud OAuth client. redirect_uri is https://cexplgtcimdezzxuimkv.supabase.co/auth/v1/callback (Supabase-managed) — user must have this exact URI in the Google Cloud OAuth 'Authorized redirect URIs' list, which appears to be the case since Google accepted the request."
+  ],
+  "critical_code_review_comments": [
+    "No new code changes were made; this was a config-only fix in Supabase Dashboard. Prior code-review comments from iteration_1 still stand — none block release."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (not in scope)", "frontend": "100% of in-scope Google OAuth redirect + regression verified"},
+  "test_credentials": "demo.escritor@cowriter.test / CoWriter#2026 (regression login OK, 5 credits, 6 projects visible)",
+  "seed_data_creation": "None. Only observed pre-existing TEST_-prefixed projects created in iteration_1.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Google OAuth is configured end-to-end at the Supabase + Google Cloud level. The only unverifiable segment is the actual Google consent + callback hop which requires interactive human credentials. If a future agent wants to test post-callback behavior, they must be given a real (throwaway) Google account and manual assist; automation cannot solve the interactive Google consent page. Email/password login remains the reliable automation path.",
+  "rca of the issue": "Original bug: 'Unsupported provider: provider is not enabled' when clicking 'Continuar com Google'. RCA: Google provider was disabled/not-configured in Supabase Dashboard (Auth → Providers → Google), so gotrue rejected the authorize call. Fix (config-only, not code): user created a Google Cloud OAuth 2.0 Client (client_id 167809373098-cahkr5llcf60af7eqt013djoao4ngkpm.apps.googleusercontent.com), pasted client_id + client_secret into Supabase Dashboard, set the Google provider to Enabled, and saved. Supabase /auth/v1/settings now advertises external.google=true. Verified: 302 to accounts.google.com happens cleanly with no provider error."
+}
