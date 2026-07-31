@@ -78,7 +78,11 @@
     "words_analyzed": "Palavras analisadas",
     "no_credit_message": "Saldo de créditos insuficiente para rodar a leitura crítica (IA). Os checks determinísticos (Fatos) rodaram normalmente e não consomem crédito.",
     "summary_label": "Resumo",
-    "sensory_distribution_label": "Distribuição por canal sensorial"
+    "sensory_distribution_label": "Distribuição por canal sensorial",
+    "export_md": "Exportar .md",
+    "export_pdf": "Exportar PDF",
+    "exporting": "Exportando...",
+    "export_error": "Erro ao exportar relatório."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",

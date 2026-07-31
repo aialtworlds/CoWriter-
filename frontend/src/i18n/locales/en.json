@@ -78,7 +78,11 @@
     "words_analyzed": "Words analyzed",
     "no_credit_message": "Insufficient credit balance to run the critical reading (AI). Deterministic checks (Facts) ran normally and don't consume credits.",
     "summary_label": "Summary",
-    "sensory_distribution_label": "Sensory channel distribution"
+    "sensory_distribution_label": "Sensory channel distribution",
+    "export_md": "Export .md",
+    "export_pdf": "Export PDF",
+    "exporting": "Exporting...",
+    "export_error": "Error exporting report."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",

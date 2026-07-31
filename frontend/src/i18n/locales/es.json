@@ -78,7 +78,11 @@
     "words_analyzed": "Palabras analizadas",
     "no_credit_message": "Saldo de créditos insuficiente para ejecutar la lectura crítica (IA). Los chequeos determinísticos (Hechos) se ejecutaron con normalidad y no consumen crédito.",
     "summary_label": "Resumen",
-    "sensory_distribution_label": "Distribución por canal sensorial"
+    "sensory_distribution_label": "Distribución por canal sensorial",
+    "export_md": "Exportar .md",
+    "export_pdf": "Exportar PDF",
+    "exporting": "Exportando...",
+    "export_error": "Error al exportar el informe."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",

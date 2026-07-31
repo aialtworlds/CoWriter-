@@ -78,7 +78,11 @@
     "words_analyzed": "Analysierte Wörter",
     "no_credit_message": "Unzureichendes Guthaben für die kritische Lektüre (KI). Die deterministischen Prüfungen (Fakten) liefen normal und verbrauchen kein Guthaben.",
     "summary_label": "Zusammenfassung",
-    "sensory_distribution_label": "Verteilung nach Sinneskanal"
+    "sensory_distribution_label": "Verteilung nach Sinneskanal",
+    "export_md": ".md exportieren",
+    "export_pdf": "PDF exportieren",
+    "exporting": "Wird exportiert...",
+    "export_error": "Fehler beim Exportieren des Berichts."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",

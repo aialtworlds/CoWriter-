@@ -78,7 +78,11 @@
     "words_analyzed": "Mots analysés",
     "no_credit_message": "Solde de crédits insuffisant pour exécuter la lecture critique (IA). Les vérifications déterministes (Faits) se sont exécutées normalement et ne consomment pas de crédit.",
     "summary_label": "Résumé",
-    "sensory_distribution_label": "Répartition par canal sensoriel"
+    "sensory_distribution_label": "Répartition par canal sensoriel",
+    "export_md": "Exporter .md",
+    "export_pdf": "Exporter PDF",
+    "exporting": "Exportation...",
+    "export_error": "Erreur lors de l'exportation du rapport."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",

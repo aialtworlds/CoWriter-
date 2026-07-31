@@ -78,7 +78,11 @@
     "words_analyzed": "Parole analizzate",
     "no_credit_message": "Credito insufficiente per eseguire la lettura critica (IA). I controlli deterministici (Fatti) sono stati eseguiti normalmente e non consumano credito.",
     "summary_label": "Riepilogo",
-    "sensory_distribution_label": "Distribuzione per canale sensoriale"
+    "sensory_distribution_label": "Distribuzione per canale sensoriale",
+    "export_md": "Esporta .md",
+    "export_pdf": "Esporta PDF",
+    "exporting": "Esportazione...",
+    "export_error": "Errore durante l'esportazione del report."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",

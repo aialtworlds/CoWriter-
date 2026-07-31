@@ -35,7 +35,7 @@ export default function ChapterResult() {
 
   const buildResultsPanel = (suffix) => (
     <div data-testid={`results-panel-${suffix}`}>
-      <AnalysisResult analysis={analysis} idSuffix={suffix} />
+      <AnalysisResult analysis={analysis} analysisRunId={analysisRunId} idSuffix={suffix} />
     </div>
   );
 

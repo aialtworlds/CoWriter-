@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Copy, CheckCircle2, AlertTriangle, Sparkles } from 'lucide-react';
+import { Copy, CheckCircle2, AlertTriangle, Sparkles, Download, FileText } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Button } from './ui/button';
 import { toast } from './ui/sonner';
+import { api } from '../lib/api';
 
 const SENSORY_CHANNEL_LABELS = {
   visual: 'Visual',
@@ -111,19 +113,68 @@ function CheckCard({ check, judgment = false }) {
   );
 }
 
-export function AnalysisResult({ analysis, idSuffix = '' }) {
-  const { t } = useTranslation();
+export function AnalysisResult({ analysis, analysisRunId, idSuffix = '' }) {
+  const { t, i18n } = useTranslation();
+  const [exporting, setExporting] = useState(null);
   if (!analysis) return null;
 
   const leituraCritica = analysis.leitura_critica || {};
   const judgmentChecks = leituraCritica.checks || [];
   const hasJudgmentResults = judgmentChecks.length > 0;
 
+  const exportReport = async (format) => {
+    const runId = analysisRunId || analysis.id || analysis.analysis_run_id;
+    if (!runId) return;
+    setExporting(format);
+    try {
+      const { data } = await api.get(`/analysis_runs/${runId}/export`, {
+        params: { format, lang: i18n.language },
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `cowriter-relatorio-${runId.slice(0, 8)}.${format}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      toast.error(t('results.export_error'));
+    } finally {
+      setExporting(null);
+    }
+  };
+
   return (
     <div data-testid={`analysis-result${idSuffix ? `-${idSuffix}` : ''}`} className="space-y-4">
-      <div className="flex items-center gap-4 text-xs text-[#9CA3AF]">
-        <span data-testid="analysis-words-analyzed">{t('results.words_analyzed')}: {analysis.palavras_analisadas}</span>
-        <span data-testid="analysis-credits-used">{t('results.credits_used')}: {analysis.creditos_consumidos}</span>
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-4 text-xs text-[#9CA3AF]">
+          <span data-testid="analysis-words-analyzed">{t('results.words_analyzed')}: {analysis.palavras_analisadas}</span>
+          <span data-testid="analysis-credits-used">{t('results.credits_used')}: {analysis.creditos_consumidos}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            data-testid="export-md-button"
+            onClick={() => exportReport('md')}
+            disabled={exporting !== null}
+            className="h-7 text-xs gap-1.5 border-white/10 text-[#9CA3AF] hover:text-[#E6E4DD]"
+          >
+            <FileText size={12} /> {exporting === 'md' ? t('results.exporting') : t('results.export_md')}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            data-testid="export-pdf-button"
+            onClick={() => exportReport('pdf')}
+            disabled={exporting !== null}
+            className="h-7 text-xs gap-1.5 border-white/10 text-[#9CA3AF] hover:text-[#E6E4DD]"
+          >
+            <Download size={12} /> {exporting === 'pdf' ? t('results.exporting') : t('results.export_pdf')}
+          </Button>
+        </div>
       </div>
       <Tabs defaultValue="fatos">
         <TabsList data-testid="analysis-tabs">
