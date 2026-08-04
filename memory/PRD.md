@@ -29,10 +29,20 @@ See full spec in conversation history — 14 checks, credit-based monetization (
 
 ## Backlog (prioritized)
 - **P0**: Regressão pós-merge (testes backend + testing agent) das Fases 1-5, ainda pendente por escolha do usuário de pular testes nesta rodada.
-- **P0 (Fase 6)**: Stripe (USD, chave de teste já disponível no ambiente) + Mercado Pago (BRL/Pix, sem credenciais do usuário ainda) para compra de pacotes de crédito, webhooks idempotentes via `external_id`, gating/CTA de compra quando saldo insuficiente.
 - **P2 (Fase 7)**: Polish visual, dark mode, QA responsivo em navegador real (não confirmado ainda), formatação locale-aware de data/número/moeda.
 
+## Fase 6 — Monetização (Stripe-only) — implementado em 2026-02
+- 3 pacotes fixos pré-pagos, sem assinatura, sem top-up avulso: Conto/novela curta (40 créditos, R$29,90), Romance médio (80 créditos, R$49,90), Romance longo (150 créditos, R$79,90). Créditos não expiram.
+- Stripe Checkout hospedado (sandbox reivindicável do Emergent, conta BR, moeda BRL). Fluxo: `/comprar-creditos` (3 cards + saldo) → Stripe Checkout → `/pagamento/sucesso` (polling de status + crédito automático na carteira) ou `/pagamento/cancelado`.
+- Backend: `backend/routers/payments.py` — `GET /payments/packages`, `POST /payments/checkout`, `GET /payments/status/{session_id}`, `POST /stripe/webhook`. Idempotência via `UPDATE payments SET status='paid' WHERE status != 'paid' RETURNING ...` dentro de transação atômica junto com `credit_transactions` (tipo=`compra_pacote`) e `credit_wallet`.
+- **Tax mode = DIY (forçado)**: Stripe Tax não é suportado para contas de país BR (confirmado via API — erro `stripe_tax_inactive`), então não há automatic_tax/billing_address_collection. Isso é uma restrição técnica do Stripe, não uma escolha de simplicidade.
+- **Pix**: tentado, mas não está ativado neste sandbox (`payment method type pix is invalid`); apenas cartão disponível por enquanto. Usuário pode ativar Pix no dashboard Stripe quando completar o KYC da conta.
+- CTAs de "Comprar créditos" adicionados no Header, na tela de resultado (quando `leitura_critica.status === 'sem_credito'`) e no modal de confirmação de análise (quando saldo insuficiente).
+- i18n completo para os 7 locales (namespace `payments`).
+- **Testado**: pagamento real completo no Stripe Sandbox via browser (cartão de teste 4242...) confirmado ponta a ponta (carteira creditada corretamente, extrato mostra a compra). `testing_agent_v3_fork` validou 11/11 testes backend (pacotes, checkout válido/inválido, status, segurança cross-user, rejeição de webhook sem assinatura válida) — `/app/backend/tests/test_payments.py`. Um bug de overflow horizontal no header mobile (375px), meio agravado pelo novo link "Comprar créditos", foi encontrado e corrigido (`Header.jsx` agora usa `flex-wrap`).
+- **Push para GitHub pendente**: usuário deve usar "Save to Github" para sincronizar todos os commits locais (merge Fase 4/5 + esta Fase 6).
+
 ## Next Tasks
-1. Sincronizar o commit de merge com GitHub via "Save to Github" (push manual não é possível pelo agente).
-2. Iniciar Fase 6 (pagamentos) — chamar `integration_playbook_expert_v2` antes de qualquer código de pagamento; começar por Stripe (chave de teste do ambiente).
-3. Quando o usuário decidir, rodar regressão completa (testes + testing agent) das Fases 1-5 que ficou pendente nesta consolidação.
+1. Sincronizar todos os commits locais com GitHub via "Save to Github" (push manual não é possível pelo agente).
+2. Quando o usuário decidir, rodar regressão completa (testes + testing agent) das Fases 1-5 que ficou pendente na consolidação do merge.
+3. Considerar ativar Pix no dashboard Stripe após o usuário completar o KYC da conta sandbox/produção.

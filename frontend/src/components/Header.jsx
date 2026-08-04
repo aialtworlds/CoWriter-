@@ -22,13 +22,13 @@ export function Header() {
       data-testid="global-header"
       className="sticky top-0 z-40 backdrop-blur-xl bg-[#0C0C0E]/80 border-b border-white/5"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:h-16 flex flex-wrap items-center justify-between gap-y-2 gap-x-4">
         <Link to="/dashboard" className="flex items-center gap-2 shrink-0" data-testid="header-logo-link">
           <Feather size={20} strokeWidth={1.5} className="text-[#34D399]" />
           <span className="font-semibold tracking-tight text-[#F4F4F5]">{t('app.name')}</span>
         </Link>
 
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1.5 sm:gap-4 flex-wrap justify-end">
           {user && (
             <>
               <Link
