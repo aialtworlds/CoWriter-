@@ -13,6 +13,9 @@ import ChapterNew from "@/pages/ChapterNew";
 import ChapterResult from "@/pages/ChapterResult";
 import CreditStatement from "@/pages/CreditStatement";
 import RulesPage from "@/pages/RulesPage";
+import BuyCredits from "@/pages/BuyCredits";
+import PaymentSuccess from "@/pages/PaymentSuccess";
+import PaymentCancel from "@/pages/PaymentCancel";
 
 function AppLayout({ children }) {
   return (
@@ -79,6 +82,30 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AppLayout><RulesPage /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/comprar-creditos"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout><BuyCredits /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/pagamento/sucesso"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout><PaymentSuccess /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/pagamento/cancelado"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout><PaymentCancel /></AppLayout>
                   </ProtectedRoute>
                 }
               />

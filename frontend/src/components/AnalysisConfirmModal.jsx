@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './ui/dialog';
 import { Button } from './ui/button';
@@ -25,6 +26,15 @@ export function AnalysisConfirmModal({ open, onOpenChange, estimate, onConfirm, 
           <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-amber-400 text-xs" data-testid="analysis-cost-estimate">
             {t('modal.cost_ai', { credits: estimate.creditos_estimados_ia, balance: estimate.saldo_atual })}
           </div>
+          {!estimate.saldo_suficiente && estimate.creditos_estimados_ia > 0 && (
+            <Link
+              to="/comprar-creditos"
+              data-testid="modal-buy-credits-link"
+              className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/10 border border-emerald-400/30 px-4 py-1.5 text-xs text-emerald-400 hover:bg-emerald-400/20 transition-colors duration-200"
+            >
+              {t('payments.buy_credits')}
+            </Link>
+          )}
         </div>
         <DialogFooter>
           <Button variant="ghost" data-testid="analysis-cancel-button" onClick={() => onOpenChange(false)}>

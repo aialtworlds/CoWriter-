@@ -137,5 +137,26 @@
     "delete": "Löschen",
     "back": "Zurück",
     "language_selector": "Oberflächensprache"
+  },
+  "payments": {
+    "buy_credits": "Guthaben kaufen",
+    "page_title": "Guthaben Kaufen",
+    "current_balance": "Aktuelles Guthaben: {{balance}} Credits",
+    "package_conto": "Kurzgeschichte/Novelle",
+    "package_romance_medio": "Mittlerer Roman",
+    "package_romance_longo": "Langer Roman",
+    "credits_label": "{{count}} Credits",
+    "buy_button": "Kaufen",
+    "redirecting": "Weiterleitung zur Zahlung...",
+    "checkout_error": "Fehler beim Starten der Zahlung. Bitte erneut versuchen.",
+    "no_expiry_note": "Credits verfallen nie. Kein Abo — zahle nur, was du nutzt.",
+    "success_title": "Zahlung bestätigt!",
+    "success_message": "{{credits}} Credits wurden deinem Guthaben hinzugefügt.",
+    "confirming": "Deine Zahlung wird bestätigt...",
+    "confirming_timeout": "Wird noch bestätigt. Das kann ein paar Sekunden dauern — dein Guthaben wird automatisch aktualisiert.",
+    "back_to_dashboard": "Zurück zu Projekten",
+    "cancel_title": "Zahlung abgebrochen",
+    "cancel_message": "Es wurde nichts abgebucht. Du kannst es jederzeit erneut versuchen.",
+    "try_again": "Erneut versuchen"
   }
 }

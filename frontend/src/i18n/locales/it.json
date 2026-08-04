@@ -137,5 +137,26 @@
     "delete": "Elimina",
     "back": "Indietro",
     "language_selector": "Lingua dell'interfaccia"
+  },
+  "payments": {
+    "buy_credits": "Acquista crediti",
+    "page_title": "Acquista Crediti",
+    "current_balance": "Saldo attuale: {{balance}} crediti",
+    "package_conto": "Racconto/novella breve",
+    "package_romance_medio": "Romanzo medio",
+    "package_romance_longo": "Romanzo lungo",
+    "credits_label": "{{count}} crediti",
+    "buy_button": "Acquista",
+    "redirecting": "Reindirizzamento al pagamento...",
+    "checkout_error": "Errore durante l'avvio del pagamento. Riprova.",
+    "no_expiry_note": "I crediti non scadono. Nessun abbonamento — paghi solo quello che usi.",
+    "success_title": "Pagamento confermato!",
+    "success_message": "{{credits}} crediti sono stati aggiunti al tuo portafoglio.",
+    "confirming": "Confermando il tuo pagamento...",
+    "confirming_timeout": "Ancora in conferma. Potrebbe richiedere qualche secondo — il saldo si aggiornerà automaticamente.",
+    "back_to_dashboard": "Torna ai progetti",
+    "cancel_title": "Pagamento annullato",
+    "cancel_message": "Nessun importo è stato addebitato. Puoi riprovare quando vuoi.",
+    "try_again": "Riprova"
   }
 }

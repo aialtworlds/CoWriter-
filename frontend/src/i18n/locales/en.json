@@ -137,5 +137,26 @@
     "delete": "Delete",
     "back": "Back",
     "language_selector": "Interface language"
+  },
+  "payments": {
+    "buy_credits": "Buy credits",
+    "page_title": "Buy Credits",
+    "current_balance": "Current balance: {{balance}} credits",
+    "package_conto": "Short story/novella",
+    "package_romance_medio": "Medium novel",
+    "package_romance_longo": "Long novel",
+    "credits_label": "{{count}} credits",
+    "buy_button": "Buy",
+    "redirecting": "Redirecting to payment...",
+    "checkout_error": "Error starting checkout. Please try again.",
+    "no_expiry_note": "Credits never expire. No subscription — pay only for what you use.",
+    "success_title": "Payment confirmed!",
+    "success_message": "{{credits}} credits were added to your wallet.",
+    "confirming": "Confirming your payment...",
+    "confirming_timeout": "Still confirming. This may take a few seconds — your balance will update automatically.",
+    "back_to_dashboard": "Back to projects",
+    "cancel_title": "Payment cancelled",
+    "cancel_message": "No charge was made. You can try again anytime.",
+    "try_again": "Try again"
   }
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Copy, CheckCircle2, AlertTriangle, Sparkles, Download, FileText } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -195,11 +196,22 @@ export function AnalysisResult({ analysis, analysisRunId, idSuffix = '' }) {
               <CheckCard key={check.check_type} check={check} judgment />
             ))
           ) : (
-            <p className="text-sm text-[#9CA3AF]" data-testid="critical-coming-soon">
-              {leituraCritica.status === 'sem_credito'
-                ? t('results.no_credit_message')
-                : t('results.coming_soon')}
-            </p>
+            <div className="space-y-3">
+              <p className="text-sm text-[#9CA3AF]" data-testid="critical-coming-soon">
+                {leituraCritica.status === 'sem_credito'
+                  ? t('results.no_credit_message')
+                  : t('results.coming_soon')}
+              </p>
+              {leituraCritica.status === 'sem_credito' && (
+                <Link
+                  to="/comprar-creditos"
+                  data-testid="results-buy-credits-link"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/10 border border-emerald-400/30 px-4 py-1.5 text-xs text-emerald-400 hover:bg-emerald-400/20 transition-colors duration-200"
+                >
+                  {t('payments.buy_credits')}
+                </Link>
+              )}
+            </div>
           )}
         </TabsContent>
       </Tabs>

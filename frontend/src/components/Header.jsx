@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Feather, Wallet, History, LogOut } from 'lucide-react';
+import { Feather, Wallet, History, LogOut, Plus } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useWallet } from '../contexts/WalletContext';
 import { LanguageSelector } from './LanguageSelector';
@@ -40,6 +40,15 @@ export function Header() {
                 <Wallet size={14} strokeWidth={1.5} />
                 {saldo}
                 <span className="hidden sm:inline text-[#9CA3AF]">{t('wallet.credits')}</span>
+              </Link>
+              <Link
+                to="/comprar-creditos"
+                data-testid="header-buy-credits-link"
+                className="flex items-center gap-1.5 rounded-full bg-emerald-400/10 border border-emerald-400/30 px-3 py-1.5 text-sm text-emerald-400 hover:bg-emerald-400/20 transition-colors duration-200"
+                title={t('payments.buy_credits')}
+              >
+                <Plus size={14} strokeWidth={1.5} />
+                <span className="hidden sm:inline">{t('payments.buy_credits')}</span>
               </Link>
               <Link
                 to="/credits"

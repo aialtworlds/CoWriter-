@@ -40,3 +40,8 @@ class BannedPatternImport(BaseModel):
     idioma: Optional[str] = None
     project_id: Optional[str] = None
     cooldown_max: int = 1
+
+
+class PaymentCheckoutCreate(BaseModel):
+    pacote: str
+    origin_url: str
