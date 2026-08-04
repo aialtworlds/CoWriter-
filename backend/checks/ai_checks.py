@@ -1,7 +1,37 @@
+"""Checks de julgamento de IA (9-13) — chamadas paralelas à API Anthropic.
+
+Cada check é uma chamada independente ao Claude, seguindo o mesmo contrato de
+entrada/saída: JSON estrito, idioma de resposta = idioma do capítulo, findings
+vazio quando não há achado real, trecho literal para permitir highlight exato,
+sugestão cirúrgica só do trecho flagado (nunca reescreve o capítulo inteiro).
+"""
 import asyncio
 import json
-import re
-from .claude_client import claude
+import os
+
+from anthropic import AsyncAnthropic
+
+_client: AsyncAnthropic | None = None
+
+
+def get_client() -> AsyncAnthropic:
+    global _client
+    if _client is None:
+        _client = AsyncAnthropic(api_key=os.environ['ANTHROPIC_API_KEY'])
+    return _client
+
+
+def get_model() -> str:
+    return os.environ.get('ANTHROPIC_MODEL', 'claude-sonnet-5')
+
+
+NUMERO_MAP = {
+    'scene_objective': 9,
+    'scene_magnetism': 10,
+    'linger_cortar': 11,
+    'subtext_frame': 12,
+    'voiceprint_pov_filter': 13,
+}
 
 SYSTEM_PROMPTS = {
     'scene_objective': """Você é um editor literário experiente analisando um capítulo de ficção quanto a ARQUITETURA DE CENA.
@@ -19,12 +49,6 @@ Para cada cena que FALHAR em um ou mais desses quatro elementos, produza um find
 Cenas que cumprem os quatro elementos não geram finding — não force achado onde a cena funciona.
 
 Não julgue qualidade de prosa, ritmo ou voz aqui — só a arquitetura funcional da cena.
-
-Responda sempre no mesmo idioma do capítulo enviado, nunca traduza a análise pra outro idioma.
-Saída estritamente em JSON, sem texto antes ou depois, sem markdown/backticks ao redor do JSON.
-Se não houver problema real, findings deve vir como array vazio — nunca forçar achado pra parecer útil.
-Nunca reescrever o capítulo inteiro — sugestão, quando houver, é só do trecho flagado.
-Cada finding aponta um trecho copiado literalmente do texto original.
 
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {
@@ -51,12 +75,6 @@ Analise cada cena do capítulo. Sinalize apenas cenas que falham nos TRÊS crit�
 uma cena só precisa de um dos três pra passar, então não sinalize cena que tem pelo menos um presente.
 
 Não julgue gramática, ritmo de frase ou voz aqui — só se a cena "segura" o leitor de algum jeito.
-
-Responda sempre no mesmo idioma do capítulo enviado, nunca traduza a análise pra outro idioma.
-Saída estritamente em JSON, sem texto antes ou depois, sem markdown/backticks ao redor do JSON.
-Se não houver problema real, findings deve vir como array vazio — nunca forçar achado pra parecer útil.
-Nunca reescrever o capítulo inteiro — sugestão, quando houver, é só do trecho flagado.
-Cada finding aponta um trecho copiado literalmente do texto original.
 
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {
@@ -97,12 +115,6 @@ de texto/tempo dedicado ao que vem depois) está alinhado ao tipo de evento. Sin
 DESCOMPASSOS reais: evento que pedia linger mas foi cortado seco, ou evento que pedia corte seco
 mas ficou se alongando desnecessariamente.
 
-Responda sempre no mesmo idioma do capítulo enviado, nunca traduza a análise pra outro idioma.
-Saída estritamente em JSON, sem texto antes ou depois, sem markdown/backticks ao redor do JSON.
-Se não houver problema real, findings deve vir como array vazio — nunca forçar achado pra parecer útil.
-Nunca reescrever o capítulo inteiro — sugestão, quando houver, é só do trecho flagado.
-Cada finding aponta um trecho copiado literalmente do texto original.
-
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {
   "check": "linger_cortar",
@@ -135,12 +147,6 @@ conflito, segredo em jogo, disputa de poder implícita).
 Não sinalize diálogos que são propositalmente diretos por design (ex: ordem militar, troca de
 informação logística sem carga emocional em jogo) — isso não é falha, é escolha correta de registro.
 
-Responda sempre no mesmo idioma do capítulo enviado, nunca traduza a análise pra outro idioma.
-Saída estritamente em JSON, sem texto antes ou depois, sem markdown/backticks ao redor do JSON.
-Se não houver problema real, findings deve vir como array vazio — nunca forçar achado pra parecer útil.
-Nunca reescrever o capítulo inteiro — sugestão, quando houver, é só do trecho flagado.
-Cada finding aponta um trecho copiado literalmente do texto original.
-
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {
   "check": "subtext_frame",
@@ -169,10 +175,6 @@ Analise os personagens com diálogo neste capítulo e avalie:
 Se o capítulo não tiver diálogo suficiente pra avaliar (menos de 2 personagens falando, ou falas
 muito curtas), retorne findings vazio e diga isso no summary — não force uma avaliação sem base.
 
-Responda sempre no mesmo idioma do capítulo enviado, nunca traduza a análise pra outro idioma.
-Saída estritamente em JSON, sem texto antes ou depois, sem markdown/backticks ao redor do JSON.
-Cada finding aponta um trecho copiado literalmente do texto original.
-
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {
   "check": "voiceprint_pov_filter",
@@ -189,62 +191,65 @@ FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 }""",
 }
 
-CHECK_NUMEROS = {
-    'scene_objective': 9,
-    'scene_magnetism': 10,
-    'linger_cortar': 11,
-    'subtext_frame': 12,
-    'voiceprint_pov_filter': 13,
-}
+
+def _parse_response_text(raw: str) -> dict:
+    raw = raw.strip()
+    if raw.startswith('```'):
+        raw = raw.strip('`')
+        if raw.lower().startswith('json'):
+            raw = raw[4:]
+    return json.loads(raw.strip())
 
 
-def _extract_json(raw: str) -> dict:
-    cleaned = raw.strip()
-    cleaned = re.sub(r'^```(json)?', '', cleaned).strip()
-    cleaned = re.sub(r'```$', '', cleaned).strip()
-    return json.loads(cleaned)
-
-
-async def _run_single_check(check_type: str, texto: str, idioma: str) -> dict:
-    system = SYSTEM_PROMPTS[check_type]
-    user_payload = json.dumps({'capitulo_texto': texto, 'idioma': idioma}, ensure_ascii=False)
-    numero = CHECK_NUMEROS[check_type]
+async def _run_single(check_type: str, texto: str, idioma: str) -> dict:
+    numero = NUMERO_MAP[check_type]
+    base = {
+        'check_type': check_type,
+        'numero': numero,
+        'tipo': 'julgamento',
+        'confiabilidade': 'ia',
+    }
     try:
-        raw = await claude.generate(system=system, prompt=user_payload, max_tokens=4096)
-        parsed = _extract_json(raw)
-        findings = parsed.get('findings', [])
-        detalhes = []
-        for f in findings:
-            detalhes.append({
+        client = get_client()
+        user_content = json.dumps({'capitulo_texto': texto, 'idioma': idioma}, ensure_ascii=False)
+        resp = await client.messages.create(
+            model=get_model(),
+            max_tokens=3000,
+            system=SYSTEM_PROMPTS[check_type],
+            messages=[{'role': 'user', 'content': user_content}],
+        )
+        raw_text = ''.join(
+            block.text for block in resp.content if getattr(block, 'type', None) == 'text'
+        )
+        data = _parse_response_text(raw_text)
+        findings = data.get('findings') or []
+        detalhes = [
+            {
                 'trecho': f.get('excerpt', ''),
-                'sugestao': f.get('suggestion'),
-                'issue': f.get('issue'),
-                'extra': {k: v for k, v in f.items() if k not in ('excerpt', 'suggestion', 'issue')},
-            })
+                'sugestao': f.get('suggestion') or f.get('issue', ''),
+                'inicio': 0,
+                'fim': 0,
+            }
+            for f in findings
+        ]
         return {
-            'check_type': check_type,
-            'numero': numero,
-            'tipo': 'julgamento',
-            'confiabilidade': 'ia',
+            **base,
             'score': len(detalhes),
             'contagem': len(detalhes),
             'detalhes': detalhes,
-            'summary': parsed.get('summary', ''),
+            'summary': data.get('summary', ''),
         }
-    except Exception as e:
+    except Exception as e:  # nunca deixa um check de IA derrubar a análise inteira
         return {
-            'check_type': check_type,
-            'numero': numero,
-            'tipo': 'julgamento',
-            'confiabilidade': 'ia',
+            **base,
             'score': 0,
             'contagem': 0,
             'detalhes': [],
-            'summary': f'Erro ao processar este check: {e}',
-            'erro': True,
+            'summary': '',
+            'erro': str(e),
         }
 
 
 async def run_judgment_checks(texto: str, idioma: str) -> list:
-    tasks = [_run_single_check(check_type, texto, idioma) for check_type in SYSTEM_PROMPTS]
+    tasks = [_run_single(check_type, texto, idioma) for check_type in NUMERO_MAP]
     return await asyncio.gather(*tasks)

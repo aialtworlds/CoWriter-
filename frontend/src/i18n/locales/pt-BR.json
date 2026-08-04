@@ -1,5 +1,8 @@
 {
-  "app": { "name": "CoWriter", "tagline": "Revisão inteligente de capítulos de ficção" },
+  "app": {
+    "name": "CoWriter",
+    "tagline": "Revisão inteligente de capítulos de ficção"
+  },
   "auth": {
     "login_title": "Entrar",
     "signup_title": "Criar conta",
@@ -16,7 +19,12 @@
     "welcome_bonus": "Ganhe 5.000 palavras de bônus ao criar sua conta — sem cartão.",
     "check_email": "Verifique seu email para confirmar a conta."
   },
-  "nav": { "dashboard": "Projetos", "credits": "Créditos", "logout": "Sair", "history": "Histórico" },
+  "nav": {
+    "dashboard": "Projetos",
+    "credits": "Créditos",
+    "logout": "Sair",
+    "history": "Histórico"
+  },
   "dashboard": {
     "title": "Meus Projetos",
     "new_project": "Novo Projeto",
@@ -68,7 +76,13 @@
     "no_issues": "Nenhum problema encontrado neste check.",
     "credits_used": "Créditos consumidos nesta análise",
     "words_analyzed": "Palavras analisadas",
-    "run_critical_button": "Rodar Leitura Crítica"
+    "no_credit_message": "Saldo de créditos insuficiente para rodar a leitura crítica (IA). Os checks determinísticos (Fatos) rodaram normalmente e não consomem crédito.",
+    "summary_label": "Resumo",
+    "sensory_distribution_label": "Distribuição por canal sensorial",
+    "export_md": "Exportar .md",
+    "export_pdf": "Exportar PDF",
+    "exporting": "Exportando...",
+    "export_error": "Erro ao exportar relatório."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -81,9 +95,9 @@
     "paragraph_opening_monotony": "Monotonia de Abertura de Parágrafo",
     "scene_objective": "Objetivo de Cena",
     "scene_magnetism": "Magnetismo de Cena",
-    "linger_cortar": "Linger / Cortar",
-    "subtext_frame": "Subtexto em Diálogos",
-    "voiceprint_pov_filter": "Voiceprint / POV Filter"
+    "linger_cortar": "Linger/Cortar",
+    "subtext_frame": "Subtexto em Diálogo",
+    "voiceprint_pov_filter": "Voiceprint / Filtro de POV"
   },
   "wallet": {
     "balance": "Saldo",
@@ -117,5 +131,11 @@
     "empty": "Nenhuma regra cadastrada ainda.",
     "delete": "Excluir regra"
   },
-  "common": { "loading": "Carregando...", "save": "Salvar", "delete": "Excluir", "back": "Voltar", "language_selector": "Idioma da interface" }
+  "common": {
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "back": "Voltar",
+    "language_selector": "Idioma da interface"
+  }
 }

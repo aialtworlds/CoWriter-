@@ -1,5 +1,8 @@
 {
-  "app": { "name": "CoWriter", "tagline": "Intelligent fiction chapter revision" },
+  "app": {
+    "name": "CoWriter",
+    "tagline": "Intelligent fiction chapter revision"
+  },
   "auth": {
     "login_title": "Log in",
     "signup_title": "Create account",
@@ -16,7 +19,12 @@
     "welcome_bonus": "Get 5,000 bonus words when you sign up — no card needed.",
     "check_email": "Check your email to confirm your account."
   },
-  "nav": { "dashboard": "Projects", "credits": "Credits", "logout": "Log out", "history": "History" },
+  "nav": {
+    "dashboard": "Projects",
+    "credits": "Credits",
+    "logout": "Log out",
+    "history": "History"
+  },
   "dashboard": {
     "title": "My Projects",
     "new_project": "New Project",
@@ -68,7 +76,13 @@
     "no_issues": "No issues found in this check.",
     "credits_used": "Credits used in this analysis",
     "words_analyzed": "Words analyzed",
-    "run_critical_button": "Run Critical Reading"
+    "no_credit_message": "Insufficient credit balance to run the critical reading (AI). Deterministic checks (Facts) ran normally and don't consume credits.",
+    "summary_label": "Summary",
+    "sensory_distribution_label": "Sensory channel distribution",
+    "export_md": "Export .md",
+    "export_pdf": "Export PDF",
+    "exporting": "Exporting...",
+    "export_error": "Error exporting report."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -81,8 +95,8 @@
     "paragraph_opening_monotony": "Paragraph-Opening Monotony",
     "scene_objective": "Scene Objective",
     "scene_magnetism": "Scene Magnetism",
-    "linger_cortar": "Linger / Cut",
-    "subtext_frame": "Dialogue Subtext",
+    "linger_cortar": "Linger/Cut Check",
+    "subtext_frame": "Subtext Frame",
     "voiceprint_pov_filter": "Voiceprint / POV Filter"
   },
   "wallet": {
@@ -117,5 +131,11 @@
     "empty": "No rules yet.",
     "delete": "Delete rule"
   },
-  "common": { "loading": "Loading...", "save": "Save", "delete": "Delete", "back": "Back", "language_selector": "Interface language" }
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "delete": "Delete",
+    "back": "Back",
+    "language_selector": "Interface language"
+  }
 }

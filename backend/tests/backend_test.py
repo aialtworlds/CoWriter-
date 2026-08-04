@@ -205,14 +205,15 @@ class TestChapterAnalysisFlow:
         assert 'saldo_atual' in est
         assert 'saldo_suficiente' in est
 
-        # 6) analyze
-        wallet_before = client_a.get(f'{BASE_URL}/api/wallet').json()['saldo_creditos']
+        # 6) analyze — Fase 4 merged behavior: checks 1-8 (Fatos) are always free; checks 9-13
+        # (Leitura Crítica / AI) now run automatically in the SAME call when wallet balance allows,
+        # consuming ceil(palavras/1000) credits. Fatos themselves never consume credit.
+        wallet_before = float(client_a.get(f'{BASE_URL}/api/wallet').json()['saldo_creditos'])
         r = client_a.post(f'{BASE_URL}/api/chapters/{cid}/analyze')
         assert r.status_code == 201, r.text
         an = r.json()
-        assert an['creditos_consumidos'] == 0, 'checks 1-8 are free — must not consume credits'
         assert 'analysis_run_id' in an
-        assert an['leitura_critica']['status'] == 'em_breve'
+        assert an['leitura_critica']['status'] in ('ok', 'sem_credito')
         run_id = an['analysis_run_id']
         self.ids['analysis_run_id'] = run_id
         # verify 8 deterministic checks
@@ -230,15 +231,18 @@ class TestChapterAnalysisFlow:
         # sensory_rotation flags visual dominance; contagem may be > 0 or score-based
         assert by_type['sensory_rotation'] is not None
 
-        # 8) wallet unchanged
-        wallet_after = client_a.get(f'{BASE_URL}/api/wallet').json()['saldo_creditos']
-        assert float(wallet_after) == float(wallet_before), 'wallet must NOT decrease for free checks 1-8'
+        # 8) wallet decreases by EXACTLY creditos_consumidos (0 if balance was insufficient)
+        wallet_after = float(client_a.get(f'{BASE_URL}/api/wallet').json()['saldo_creditos'])
+        assert wallet_after == wallet_before - an['creditos_consumidos'], (
+            f'wallet must decrease by exactly creditos_consumidos: before={wallet_before}, '
+            f'after={wallet_after}, consumidos={an["creditos_consumidos"]}'
+        )
 
         # 9) GET analysis_run and verify persisted
         r = client_a.get(f'{BASE_URL}/api/analysis_runs/{run_id}')
         assert r.status_code == 200
         data = r.json()
-        assert data['creditos_consumidos'] == 0
+        assert data['creditos_consumidos'] == an['creditos_consumidos']
         assert len(data['fatos']) == 8
 
         # 10) history has analysis_run_id

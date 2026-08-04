@@ -1,5 +1,8 @@
 {
-  "app": { "name": "CoWriter", "tagline": "Revisión inteligente de capítulos de ficción" },
+  "app": {
+    "name": "CoWriter",
+    "tagline": "Revisión inteligente de capítulos de ficción"
+  },
   "auth": {
     "login_title": "Iniciar sesión",
     "signup_title": "Crear cuenta",
@@ -16,7 +19,12 @@
     "welcome_bonus": "Recibe 5.000 palabras de bono al crear tu cuenta — sin tarjeta.",
     "check_email": "Revisa tu correo para confirmar la cuenta."
   },
-  "nav": { "dashboard": "Proyectos", "credits": "Créditos", "logout": "Salir", "history": "Historial" },
+  "nav": {
+    "dashboard": "Proyectos",
+    "credits": "Créditos",
+    "logout": "Salir",
+    "history": "Historial"
+  },
   "dashboard": {
     "title": "Mis Proyectos",
     "new_project": "Nuevo Proyecto",
@@ -68,7 +76,13 @@
     "no_issues": "No se encontraron problemas en este check.",
     "credits_used": "Créditos consumidos en este análisis",
     "words_analyzed": "Palabras analizadas",
-    "run_critical_button": "Ejecutar Lectura Crítica"
+    "no_credit_message": "Saldo de créditos insuficiente para ejecutar la lectura crítica (IA). Los chequeos determinísticos (Hechos) se ejecutaron con normalidad y no consumen crédito.",
+    "summary_label": "Resumen",
+    "sensory_distribution_label": "Distribución por canal sensorial",
+    "export_md": "Exportar .md",
+    "export_pdf": "Exportar PDF",
+    "exporting": "Exportando...",
+    "export_error": "Error al exportar el informe."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -81,9 +95,9 @@
     "paragraph_opening_monotony": "Monotonía de Apertura de Párrafo",
     "scene_objective": "Objetivo de Escena",
     "scene_magnetism": "Magnetismo de Escena",
-    "linger_cortar": "Linger / Corte",
-    "subtext_frame": "Subtexto en Diálogos",
-    "voiceprint_pov_filter": "Voiceprint / Filtro POV"
+    "linger_cortar": "Demora/Corte",
+    "subtext_frame": "Subtexto en Diálogo",
+    "voiceprint_pov_filter": "Huella de Voz / Filtro POV"
   },
   "wallet": {
     "balance": "Saldo",
@@ -117,5 +131,11 @@
     "empty": "Aún no hay reglas.",
     "delete": "Eliminar regla"
   },
-  "common": { "loading": "Cargando...", "save": "Guardar", "delete": "Eliminar", "back": "Volver", "language_selector": "Idioma de la interfaz" }
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "back": "Volver",
+    "language_selector": "Idioma de la interfaz"
+  }
 }

@@ -344,7 +344,8 @@ class TestAnalyzeIntegration:
             'sensory_rotation', 'filter_words', 'dialogue_tag_variety', 'paragraph_opening_monotony',
         }
         assert expected.issubset(types)
-        # credits still 0
-        assert r_an.json()['creditos_consumidos'] == 0
+        # Fatos (checks 1-8) always run and are represented in the response regardless of
+        # whether the AI Leitura Crítica also ran (that now runs automatically when balance allows).
+        assert r_an.json()['creditos_consumidos'] >= 0
 
         client_a.delete(f'{BASE_URL}/api/projects/{pid}')

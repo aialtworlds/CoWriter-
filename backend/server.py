@@ -10,7 +10,7 @@ load_dotenv(ROOT_DIR / '.env')
 
 from database import init_pool, close_pool
 from auth import current_user
-from routers import projects, chapters, wallet, analysis, rules, ai_health
+from routers import projects, chapters, wallet, analysis, rules, export
 
 app = FastAPI(title='CoWriter API')
 api_router = APIRouter(prefix='/api')
@@ -31,7 +31,7 @@ api_router.include_router(chapters.router)
 api_router.include_router(wallet.router)
 api_router.include_router(analysis.router)
 api_router.include_router(rules.router)
-api_router.include_router(ai_health.router)
+api_router.include_router(export.router)
 
 app.include_router(api_router)
 

@@ -1,5 +1,8 @@
 {
-  "app": { "name": "CoWriter", "tagline": "Révision intelligente des chapitres de fiction" },
+  "app": {
+    "name": "CoWriter",
+    "tagline": "Révision intelligente des chapitres de fiction"
+  },
   "auth": {
     "login_title": "Se connecter",
     "signup_title": "Créer un compte",
@@ -16,7 +19,12 @@
     "welcome_bonus": "Recevez 5 000 mots offerts à la création du compte — sans carte.",
     "check_email": "Vérifiez votre email pour confirmer le compte."
   },
-  "nav": { "dashboard": "Projets", "credits": "Crédits", "logout": "Se déconnecter", "history": "Historique" },
+  "nav": {
+    "dashboard": "Projets",
+    "credits": "Crédits",
+    "logout": "Se déconnecter",
+    "history": "Historique"
+  },
   "dashboard": {
     "title": "Mes Projets",
     "new_project": "Nouveau Projet",
@@ -68,7 +76,13 @@
     "no_issues": "Aucun problème trouvé dans ce check.",
     "credits_used": "Crédits consommés dans cette analyse",
     "words_analyzed": "Mots analysés",
-    "run_critical_button": "Lancer la Lecture Critique"
+    "no_credit_message": "Solde de crédits insuffisant pour exécuter la lecture critique (IA). Les vérifications déterministes (Faits) se sont exécutées normalement et ne consomment pas de crédit.",
+    "summary_label": "Résumé",
+    "sensory_distribution_label": "Répartition par canal sensoriel",
+    "export_md": "Exporter .md",
+    "export_pdf": "Exporter PDF",
+    "exporting": "Exportation...",
+    "export_error": "Erreur lors de l'exportation du rapport."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -81,9 +95,9 @@
     "paragraph_opening_monotony": "Monotonie d'Ouverture de Paragraphe",
     "scene_objective": "Objectif de Scène",
     "scene_magnetism": "Magnétisme de Scène",
-    "linger_cortar": "Linger / Coupe",
-    "subtext_frame": "Sous-texte des Dialogues",
-    "voiceprint_pov_filter": "Voiceprint / Filtre POV"
+    "linger_cortar": "Prolonger/Couper",
+    "subtext_frame": "Sous-texte du Dialogue",
+    "voiceprint_pov_filter": "Empreinte Vocale / Filtre POV"
   },
   "wallet": {
     "balance": "Solde",
@@ -117,5 +131,11 @@
     "empty": "Aucune règle encore.",
     "delete": "Supprimer la règle"
   },
-  "common": { "loading": "Chargement...", "save": "Enregistrer", "delete": "Supprimer", "back": "Retour", "language_selector": "Langue de l'interface" }
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "back": "Retour",
+    "language_selector": "Langue de l'interface"
+  }
 }

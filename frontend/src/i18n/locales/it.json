@@ -1,5 +1,8 @@
 {
-  "app": { "name": "CoWriter", "tagline": "Revisione intelligente dei capitoli di narrativa" },
+  "app": {
+    "name": "CoWriter",
+    "tagline": "Revisione intelligente dei capitoli di narrativa"
+  },
   "auth": {
     "login_title": "Accedi",
     "signup_title": "Crea account",
@@ -16,7 +19,12 @@
     "welcome_bonus": "Ricevi 5.000 parole bonus alla creazione dell'account — senza carta.",
     "check_email": "Controlla la tua email per confermare l'account."
   },
-  "nav": { "dashboard": "Progetti", "credits": "Crediti", "logout": "Esci", "history": "Cronologia" },
+  "nav": {
+    "dashboard": "Progetti",
+    "credits": "Crediti",
+    "logout": "Esci",
+    "history": "Cronologia"
+  },
   "dashboard": {
     "title": "I Miei Progetti",
     "new_project": "Nuovo Progetto",
@@ -68,7 +76,13 @@
     "no_issues": "Nessun problema trovato in questo check.",
     "credits_used": "Crediti consumati in questa analisi",
     "words_analyzed": "Parole analizzate",
-    "run_critical_button": "Esegui Lettura Critica"
+    "no_credit_message": "Credito insufficiente per eseguire la lettura critica (IA). I controlli deterministici (Fatti) sono stati eseguiti normalmente e non consumano credito.",
+    "summary_label": "Riepilogo",
+    "sensory_distribution_label": "Distribuzione per canale sensoriale",
+    "export_md": "Esporta .md",
+    "export_pdf": "Esporta PDF",
+    "exporting": "Esportazione...",
+    "export_error": "Errore durante l'esportazione del report."
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -81,9 +95,9 @@
     "paragraph_opening_monotony": "Monotonia di Apertura del Paragrafo",
     "scene_objective": "Obiettivo di Scena",
     "scene_magnetism": "Magnetismo di Scena",
-    "linger_cortar": "Linger / Taglio",
-    "subtext_frame": "Sottotesto nei Dialoghi",
-    "voiceprint_pov_filter": "Voiceprint / Filtro POV"
+    "linger_cortar": "Indugio/Taglio",
+    "subtext_frame": "Sottotesto nel Dialogo",
+    "voiceprint_pov_filter": "Impronta Vocale / Filtro POV"
   },
   "wallet": {
     "balance": "Saldo",
@@ -117,5 +131,11 @@
     "empty": "Ancora nessuna regola.",
     "delete": "Elimina regola"
   },
-  "common": { "loading": "Caricamento...", "save": "Salva", "delete": "Elimina", "back": "Indietro", "language_selector": "Lingua dell'interfaccia" }
+  "common": {
+    "loading": "Caricamento...",
+    "save": "Salva",
+    "delete": "Elimina",
+    "back": "Indietro",
+    "language_selector": "Lingua dell'interfaccia"
+  }
 }
