@@ -42,6 +42,12 @@ See full spec in conversation history — 14 checks, credit-based monetization (
 - **Testado**: pagamento real completo no Stripe Sandbox via browser (cartão de teste 4242...) confirmado ponta a ponta (carteira creditada corretamente, extrato mostra a compra). `testing_agent_v3_fork` validou 11/11 testes backend (pacotes, checkout válido/inválido, status, segurança cross-user, rejeição de webhook sem assinatura válida) — `/app/backend/tests/test_payments.py`. Um bug de overflow horizontal no header mobile (375px), meio agravado pelo novo link "Comprar créditos", foi encontrado e corrigido (`Header.jsx` agora usa `flex-wrap`).
 - **Push para GitHub pendente**: usuário deve usar "Save to Github" para sincronizar todos os commits locais (merge Fase 4/5 + esta Fase 6).
 
+## Fase 6.1 — Recibo por Email (Resend) — implementado em 2026-02
+- `backend/email_service.py`: `send_purchase_receipt(email, payment)` envia um recibo HTML (pt-BR) via Resend quando uma compra de créditos é confirmada. Não bloqueia nem falha o crédito/webhook se o envio de email der erro (try/except isolado).
+- Email do destinatário é capturado no `metadata.email` da sessão Stripe no momento do checkout (via JWT claims do usuário logado) — sem alterar o schema da tabela `payments`.
+- **Limitação atual conhecida (não é bug)**: conta Resend em modo de teste, sem domínio verificado. Só é possível enviar para o email do próprio dono da conta (`undeadavattar@gmail.com`, confirmado via teste real). Para enviar para qualquer usuário, o usuário precisa verificar um domínio em resend.com/domains e trocar `SENDER_EMAIL` no `.env` para um endereço desse domínio.
+- Testado via webhook simulado assinado: envio para email não verificado falhou graciosamente (logado, sem impacto no crédito); envio para o email verificado do dono da conta funcionou sem erro nos logs.
+
 ## Next Tasks
 1. Sincronizar todos os commits locais com GitHub via "Save to Github" (push manual não é possível pelo agente).
 2. Quando o usuário decidir, rodar regressão completa (testes + testing agent) das Fases 1-5 que ficou pendente na consolidação do merge.

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from auth import current_user
 from database import get_pool
 from schemas import PaymentCheckoutCreate
+from email_service import send_purchase_receipt
 
 router = APIRouter()
 
@@ -42,7 +43,7 @@ async def create_checkout(payload: PaymentCheckoutCreate, user=Depends(current_u
         }],
         success_url=f"{payload.origin_url}/pagamento/sucesso?session_id={{CHECKOUT_SESSION_ID}}",
         cancel_url=f"{payload.origin_url}/pagamento/cancelado",
-        metadata={'user_id': user['sub'], 'pacote': payload.pacote},
+        metadata={'user_id': user['sub'], 'pacote': payload.pacote, 'email': user.get('email') or ''},
     )
 
     pool = get_pool()
@@ -69,7 +70,8 @@ async def get_payment_status(session_id: str, user=Depends(current_user)):
         try:
             session = stripe.checkout.Session.retrieve(session_id)
             if session.payment_status == 'paid' or session.status == 'complete':
-                await _credit_payment(pool, session_id)
+                email = (session.metadata or {}).get('email')
+                await _credit_payment(pool, session_id, email)
                 row = await pool.fetchrow(
                     "SELECT status, pacote, creditos_concedidos, valor, moeda FROM payments WHERE external_id=$1",
                     session_id,
@@ -94,17 +96,18 @@ async def stripe_webhook(request: Request):
     if event_type == 'checkout.session.completed' or (
         event_type == 'checkout.session.async_payment_succeeded' and obj.get('payment_status') == 'paid'
     ):
-        await _credit_payment(get_pool(), obj['id'])
+        email = (obj.get('metadata') or {}).get('email')
+        await _credit_payment(get_pool(), obj['id'], email)
 
     return {'status': 'ok'}
 
 
-async def _credit_payment(pool, session_id: str):
+async def _credit_payment(pool, session_id: str, email: str = None):
     async with pool.acquire() as conn:
         async with conn.transaction():
             row = await conn.fetchrow(
                 "UPDATE payments SET status='paid' WHERE external_id=$1 AND provider='stripe' AND status != 'paid' "
-                "RETURNING id, user_id, creditos_concedidos",
+                "RETURNING id, user_id, creditos_concedidos, pacote, valor",
                 session_id,
             )
             if row:
@@ -118,3 +121,5 @@ async def _credit_payment(pool, session_id: str):
                     "WHERE user_id=$2",
                     row['creditos_concedidos'], row['user_id'],
                 )
+    if row and email:
+        await send_purchase_receipt(email, dict(row))
