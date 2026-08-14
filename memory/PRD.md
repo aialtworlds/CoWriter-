@@ -48,6 +48,14 @@ See full spec in conversation history — 14 checks, credit-based monetization (
 - **Limitação atual conhecida (não é bug)**: conta Resend em modo de teste, sem domínio verificado. Só é possível enviar para o email do próprio dono da conta (`undeadavattar@gmail.com`, confirmado via teste real). Para enviar para qualquer usuário, o usuário precisa verificar um domínio em resend.com/domains e trocar `SENDER_EMAIL` no `.env` para um endereço desse domínio.
 - Testado via webhook simulado assinado: envio para email não verificado falhou graciosamente (logado, sem impacto no crédito); envio para o email verificado do dono da conta funcionou sem erro nos logs.
 
+## Fase 6.2 — Stripe: troca para conta própria do usuário (Flow B / BYOK) — 2026-02
+- Usuário optou por usar sua própria conta Stripe (já verificada/KYC completo, `charges_enabled=true`, `payouts_enabled=true`, país BR, moeda BRL) em vez da sandbox gerenciada pelo Emergent. Conta diferente da sandbox original (`acct_1U0rW0...` vs `acct_1U0qBw...`).
+- Usuário configurou manualmente um webhook no dashboard Stripe apontando para `{REACT_APP_BACKEND_URL}/api/stripe/webhook` e forneceu o signing secret correspondente.
+- `backend/.env` atualizado: `STRIPE_SECRET_KEY`/`STRIPE_PUBLISHABLE_KEY` (live), `STRIPE_WEBHOOK_SECRET` (do webhook próprio), `STRIPE_ACCOUNT_ID`, `STRIPE_MODE="live"`.
+- **Validado com segurança (sem gerar cobrança real)**: criação de sessão de checkout live (`cs_live_...`) funcionando; webhook com a nova assinatura verificado corretamente e crédito atômico na carteira confirmado ponta a ponta. Nenhum pagamento real com cartão foi executado (evitado deliberadamente para não gerar cobrança de verdade).
+- **Incidente à parte durante essa troca**: o projeto Supabase ficou temporariamente inacessível (DNS do projeto não resolvia — projeto pausado no plano gratuito). Usuário reativou via dashboard Supabase e o backend voltou ao normal. Não relacionado à mudança do Stripe.
+- Já que agora é uma conta live, atenção: qualquer teste de pagamento real com cartão de verdade vai gerar cobrança de verdade. Testes futuros devem usar valores simbólicos ou avisar o usuário antes.
+
 ## Next Tasks
 1. Sincronizar todos os commits locais com GitHub via "Save to Github" (push manual não é possível pelo agente).
 2. Quando o usuário decidir, rodar regressão completa (testes + testing agent) das Fases 1-5 que ficou pendente na consolidação do merge.
