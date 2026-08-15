@@ -56,6 +56,11 @@ See full spec in conversation history — 14 checks, credit-based monetization (
 - **Incidente à parte durante essa troca**: o projeto Supabase ficou temporariamente inacessível (DNS do projeto não resolvia — projeto pausado no plano gratuito). Usuário reativou via dashboard Supabase e o backend voltou ao normal. Não relacionado à mudança do Stripe.
 - Já que agora é uma conta live, atenção: qualquer teste de pagamento real com cartão de verdade vai gerar cobrança de verdade. Testes futuros devem usar valores simbólicos ou avisar o usuário antes.
 
+## Fase 6.3 — Domínio Resend (tentativa, revertida por ora) — 2026-02
+- Domínio `cowriter.com.br` foi registrado no Resend (via API) com os registros DNS necessários (TXT `resend._domainkey`, MX `send`, TXT `send`) gerados e entregues ao usuário.
+- Usuário usa Registro.br, cujo painel não permite edição de registros TXT/MX customizados no plano atual. Opção de migrar para Cloudflare (DNS gratuito) foi oferecida; usuário optou por **não fazer isso agora** e manter `SENDER_EMAIL="onboarding@resend.dev"` (modo teste — só entrega para o email do próprio dono da conta Resend, `undeadavattar@gmail.com`).
+- Domínio `cowriter.com.br` permanece cadastrado no Resend (status `not_started`) para quando o usuário decidir migrar o DNS.
+
 ## Next Tasks
 1. Sincronizar todos os commits locais com GitHub via "Save to Github" (push manual não é possível pelo agente).
 2. Quando o usuário decidir, rodar regressão completa (testes + testing agent) das Fases 1-5 que ficou pendente na consolidação do merge.
