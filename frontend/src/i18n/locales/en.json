@@ -53,7 +53,9 @@
     "analyze": "Analyze Chapter",
     "analyzing": "Analyzing...",
     "save_and_analyze": "Save and Analyze",
-    "drop_hint": "Drag a .docx, .txt or .md file, or click to select"
+    "drop_hint": "Drag a .docx, .pdf, .txt or .md file, or click to select",
+    "delete_confirm_title": "Delete chapter?",
+    "delete_confirm_body": "This will delete the chapter and its entire analysis history. This action cannot be undone."
   },
   "modal": {
     "confirm_title": "Confirm analysis",
@@ -61,7 +63,10 @@
     "cost_facts": "Checks 1–8 (Facts): free and unlimited.",
     "cost_ai": "Critical Reading (AI): would cost {{credits}} credits. Current balance: {{balance}}.",
     "confirm_button": "Confirm and Analyze",
-    "cancel_button": "Cancel"
+    "cancel_button": "Cancel",
+    "explanation_lang_same": "Same language as the manuscript",
+    "explanation_lang_label": "Explanation language",
+    "explanation_lang_hint": "The quoted excerpt always stays in the original language of your text. Only the explanation and suggestion follow the language chosen here."
   },
   "results": {
     "facts_tab": "Facts",
@@ -82,7 +87,17 @@
     "export_md": "Export .md",
     "export_pdf": "Export PDF",
     "exporting": "Exporting...",
-    "export_error": "Error exporting report."
+    "export_error": "Error exporting report.",
+    "sensory_visual": "Visual",
+    "sensory_auditory": "Auditory",
+    "sensory_olfactory": "Olfactory",
+    "sensory_tactile": "Tactile",
+    "sensory_gustatory": "Gustatory",
+    "monitored_phrases": "{{count}} monitored phrases in this check",
+    "occurrences_breakdown_label": "Occurrences by item",
+    "rhythm_stats": "Avg: {{avg}} words · Stdev: {{stdev}} · Min: {{min}} · Max: {{max}}",
+    "dialogue_tag_stats": "{{withAdverb}} of {{total}} tagged lines use an adverb",
+    "paragraph_stats": "{{total}} paragraphs analyzed · biggest opening repetition: {{maxRepeat}}x"
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -136,7 +151,9 @@
     "save": "Save",
     "delete": "Delete",
     "back": "Back",
-    "language_selector": "Interface language"
+    "language_selector": "Interface language",
+    "cancel": "Cancel",
+    "edit": "Edit"
   },
   "payments": {
     "buy_credits": "Buy credits",

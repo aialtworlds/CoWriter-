@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from auth import current_user
 from database import get_pool
-from schemas import ChapterCreate
+from schemas import ChapterCreate, ChapterUpdate
 from checks.helpers import count_words
 
 try:
@@ -69,6 +69,18 @@ async def get_chapter(chapter_id: str, user=Depends(current_user)):
     result = dict(row)
     result['palavras'] = count_words(result['texto_bruto'])
     return result
+
+
+@router.patch('/chapters/{chapter_id}')
+async def update_chapter(chapter_id: str, payload: ChapterUpdate, user=Depends(current_user)):
+    pool = get_pool()
+    await _assert_chapter_owner(pool, chapter_id, user['sub'])
+    row = await pool.fetchrow(
+        "UPDATE chapters SET titulo=COALESCE($1, titulo) WHERE id=$2 "
+        "RETURNING id, project_id, titulo, idioma_detectado, criado_em",
+        payload.titulo, chapter_id,
+    )
+    return dict(row)
 
 
 @router.delete('/chapters/{chapter_id}', status_code=204)

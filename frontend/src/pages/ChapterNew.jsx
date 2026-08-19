@@ -21,6 +21,8 @@ export default function ChapterNew() {
   const [estimate, setEstimate] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [includeCritical, setIncludeCritical] = useState(true);
+  const [explanationLanguage, setExplanationLanguage] = useState('');
 
   const wordCount = texto.trim() ? texto.trim().split(/\s+/).length : 0;
 
@@ -47,7 +49,16 @@ export default function ChapterNew() {
   const handleConfirmAnalyze = async () => {
     setLoading(true);
     try {
-      const { data: analysis } = await api.post(`/chapters/${chapterId}/analyze`);
+      const { data: analysis } = await api.post(
+        `/chapters/${chapterId}/analyze`,
+        null,
+        {
+          params: {
+            incluir_leitura_critica: includeCritical,
+            ...(explanationLanguage ? { idioma_explicacao: explanationLanguage } : {}),
+          },
+        },
+      );
       await refresh();
       navigate(`/analysis/${analysis.analysis_run_id}`);
     } catch {
@@ -86,6 +97,10 @@ export default function ChapterNew() {
         estimate={estimate}
         onConfirm={handleConfirmAnalyze}
         loading={loading}
+        includeCritical={includeCritical}
+        onIncludeCriticalChange={setIncludeCritical}
+        explanationLanguage={explanationLanguage}
+        onExplanationLanguageChange={setExplanationLanguage}
       />
     </div>
   );

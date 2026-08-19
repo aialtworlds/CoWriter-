@@ -23,4 +23,5 @@ def analyze(text: str, idioma: str) -> dict:
         'score': len(detalhes),
         'contagem': len(detalhes),
         'detalhes': detalhes,
+        'metricas': {'frases_monitoradas': len(phrases)},
     }

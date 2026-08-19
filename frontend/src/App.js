@@ -10,6 +10,7 @@ import Signup from "@/pages/Signup";
 import Dashboard from "@/pages/Dashboard";
 import ProjectDetail from "@/pages/ProjectDetail";
 import ChapterNew from "@/pages/ChapterNew";
+import ChapterAnalyze from "@/pages/ChapterAnalyze";
 import ChapterResult from "@/pages/ChapterResult";
 import CreditStatement from "@/pages/CreditStatement";
 import RulesPage from "@/pages/RulesPage";
@@ -58,6 +59,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AppLayout><ChapterNew /></AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/chapters/:chapterId"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout><ChapterAnalyze /></AppLayout>
                   </ProtectedRoute>
                 }
               />

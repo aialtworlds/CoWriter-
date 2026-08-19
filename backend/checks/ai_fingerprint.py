@@ -37,4 +37,5 @@ def analyze(text: str, idioma: str, custom_patterns: list = None) -> dict:
         'contagem': len(detalhes),
         'detalhes': detalhes,
         'custom_hits': custom_hits,
+        'metricas': {'frases_monitoradas': len(phrases)},
     }

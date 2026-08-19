@@ -35,4 +35,9 @@ def analyze(text: str, idioma: str) -> dict:
         'score': len(detalhes),
         'contagem': len(detalhes),
         'detalhes': detalhes,
+        'metricas': {
+            'total_paragrafos': len(paragraphs),
+            'maior_repeticao': max(counts.values()) if counts else 0,
+            'limite': MIN_REPEATS,
+        },
     }

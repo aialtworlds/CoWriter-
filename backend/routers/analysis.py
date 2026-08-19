@@ -1,6 +1,6 @@
 import json
 import math
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from auth import current_user
 from database import get_pool
 from checks.helpers import count_words
@@ -30,7 +30,12 @@ async def estimate_analysis(chapter_id: str, user=Depends(current_user)):
 
 
 @router.post('/chapters/{chapter_id}/analyze', status_code=201)
-async def analyze_chapter(chapter_id: str, user=Depends(current_user)):
+async def analyze_chapter(
+    chapter_id: str,
+    incluir_leitura_critica: bool = Query(True),
+    idioma_explicacao: str = Query(None),
+    user=Depends(current_user),
+):
     pool = get_pool()
     chapter = await _assert_chapter_owner(pool, chapter_id, user['sub'])
     texto = chapter['texto_bruto']
@@ -62,12 +67,15 @@ async def analyze_chapter(chapter_id: str, user=Depends(current_user)):
 
     resultados_julgamento = []
     creditos_consumidos = 0
-    leitura_critica_status = 'sem_credito'
-    if saldo_suficiente:
-        resultados_julgamento = await run_judgment_checks(texto, idioma)
+    if not incluir_leitura_critica:
+        leitura_critica_status = 'pulada_pelo_usuario'
+    elif saldo_suficiente:
+        resultados_julgamento = await run_judgment_checks(texto, idioma, idioma_explicacao)
         creditos_consumidos = creditos_necessarios
         leitura_critica_status = 'ok'
     elif creditos_necessarios == 0:
+        leitura_critica_status = 'sem_credito'
+    else:
         leitura_critica_status = 'sem_credito'
 
     resultados = resultados_fatos + resultados_julgamento
@@ -85,6 +93,7 @@ async def analyze_chapter(chapter_id: str, user=Depends(current_user)):
                     'items': r['detalhes'],
                     'distribuicao': r.get('distribuicao'),
                     'summary': r.get('summary'),
+                    'metricas': r.get('metricas'),
                 }
                 await conn.execute(
                     "INSERT INTO check_results (analysis_run_id, check_type, numero, tipo, confiabilidade, score, contagem, detalhes_json) "
@@ -113,6 +122,11 @@ async def analyze_chapter(chapter_id: str, user=Depends(current_user)):
     if leitura_critica_status == 'sem_credito':
         leitura_critica['mensagem'] = (
             'Saldo de créditos insuficiente para rodar a leitura crítica (IA). '
+            'Os checks determinísticos (Fatos) rodaram normalmente e não consomem crédito.'
+        )
+    elif leitura_critica_status == 'pulada_pelo_usuario':
+        leitura_critica['mensagem'] = (
+            'Você optou por não rodar a leitura crítica (IA) nesta análise. '
             'Os checks determinísticos (Fatos) rodaram normalmente e não consomem crédito.'
         )
 
@@ -153,6 +167,8 @@ async def get_analysis_run(analysis_run_id: str, user=Depends(current_user)):
                 item['distribuicao'] = raw['distribuicao']
             if raw.get('summary'):
                 item['summary'] = raw['summary']
+            if raw.get('metricas') is not None:
+                item['metricas'] = raw['metricas']
         else:
             item['detalhes'] = raw or []
         if item['tipo'] == 'julgamento':

@@ -19,6 +19,10 @@ class ChapterCreate(BaseModel):
     texto_bruto: str
 
 
+class ChapterUpdate(BaseModel):
+    titulo: Optional[str] = None
+
+
 class BannedPatternCreate(BaseModel):
     tipo: str
     texto_padrao: str

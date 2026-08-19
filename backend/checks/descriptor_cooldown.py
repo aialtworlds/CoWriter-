@@ -10,8 +10,11 @@ def analyze(text: str, idioma: str, custom_patterns: list = None) -> dict:
     descritores = DESCRITORES.get(lang, DESCRITORES['en'])
     detalhes = []
     custom_hits = {}
+    full_counts = {}
     for descritor in descritores:
         matches = list(re.finditer(re.escape(descritor), text, re.IGNORECASE))
+        if matches:
+            full_counts[descritor] = len(matches)
         if len(matches) > COOLDOWN_MAX:
             for m in matches[COOLDOWN_MAX:]:
                 detalhes.append({
@@ -34,6 +37,7 @@ def analyze(text: str, idioma: str, custom_patterns: list = None) -> dict:
                     'inicio': m.start(),
                     'fim': m.end(),
                 })
+    ocorrencias_por_descritor = dict(sorted(full_counts.items(), key=lambda kv: -kv[1])[:10])
     return {
         'check_type': 'descriptor_cooldown',
         'numero': 3,
@@ -43,4 +47,5 @@ def analyze(text: str, idioma: str, custom_patterns: list = None) -> dict:
         'contagem': len(detalhes),
         'detalhes': detalhes,
         'custom_hits': custom_hits,
+        'metricas': {'ocorrencias_por_descritor': ocorrencias_por_descritor},
     }

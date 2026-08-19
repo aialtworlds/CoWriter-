@@ -10,6 +10,18 @@ export function ChapterUpload({ value, onChange }) {
   const inputRef = useRef(null);
   const [dragging, setDragging] = useState(false);
 
+  const extractPdfText = async (file) => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pages = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      pages.push(content.items.map((item) => item.str).join(' '));
+    }
+    return pages.join('\n\n');
+  };
+
   const handleFile = async (file) => {
     if (!file) return;
     const name = file.name.toLowerCase();
@@ -18,11 +30,22 @@ export function ChapterUpload({ value, onChange }) {
         const arrayBuffer = await file.arrayBuffer();
         const result = await mammoth.extractRawText({ arrayBuffer });
         onChange(result.value);
+      } else if (name.endsWith('.pdf')) {
+        if (!window.pdfjsLib) {
+          toast.error('Leitor de PDF ainda não carregou. Aguarde alguns segundos e tente de novo.');
+          return;
+        }
+        const text = await extractPdfText(file);
+        if (!text.trim()) {
+          toast.error('Não foi possível extrair texto deste PDF. Ele pode ser uma imagem escaneada (sem texto selecionável).');
+          return;
+        }
+        onChange(text);
       } else if (name.endsWith('.txt') || name.endsWith('.md')) {
         const text = await file.text();
         onChange(text);
       } else {
-        toast.error('Formato não suportado. Use .docx, .txt ou .md.');
+        toast.error('Formato não suportado. Use .docx, .pdf, .txt ou .md.');
       }
     } catch (err) {
       toast.error('Não foi possível ler o arquivo.');
@@ -54,7 +77,7 @@ export function ChapterUpload({ value, onChange }) {
           ref={inputRef}
           type="file"
           data-testid="chapter-upload-input"
-          accept=".docx,.txt,.md"
+          accept=".docx,.pdf,.txt,.md"
           className="hidden"
           onChange={(e) => handleFile(e.target.files?.[0])}
         />

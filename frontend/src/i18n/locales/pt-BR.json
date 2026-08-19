@@ -53,7 +53,9 @@
     "analyze": "Analisar Capítulo",
     "analyzing": "Analisando...",
     "save_and_analyze": "Salvar e Analisar",
-    "drop_hint": "Arraste um arquivo .docx, .txt ou .md, ou clique para selecionar"
+    "drop_hint": "Arraste um arquivo .docx, .pdf, .txt ou .md, ou clique para selecionar",
+    "delete_confirm_title": "Excluir capítulo?",
+    "delete_confirm_body": "Isso vai apagar o capítulo e todo o histórico de análises dele. Essa ação não pode ser desfeita."
   },
   "modal": {
     "confirm_title": "Confirmar análise",
@@ -61,7 +63,10 @@
     "cost_facts": "Checks 1–8 (Fatos): gratuitos e ilimitados.",
     "cost_ai": "Leitura Crítica (IA): chegaria à {{credits}} créditos. Saldo atual: {{balance}}.",
     "confirm_button": "Confirmar e Analisar",
-    "cancel_button": "Cancelar"
+    "cancel_button": "Cancelar",
+    "explanation_lang_same": "Mesmo idioma do manuscrito",
+    "explanation_lang_label": "Idioma da explicação",
+    "explanation_lang_hint": "O trecho citado sempre fica no idioma original do seu texto. Só a explicação e a sugestão seguem o idioma escolhido aqui."
   },
   "results": {
     "facts_tab": "Fatos",
@@ -82,7 +87,17 @@
     "export_md": "Exportar .md",
     "export_pdf": "Exportar PDF",
     "exporting": "Exportando...",
-    "export_error": "Erro ao exportar relatório."
+    "export_error": "Erro ao exportar relatório.",
+    "sensory_visual": "Visual",
+    "sensory_auditory": "Auditivo",
+    "sensory_olfactory": "Olfativo",
+    "sensory_tactile": "Tátil",
+    "sensory_gustatory": "Gustativo",
+    "monitored_phrases": "{{count}} frases monitoradas nesta verificação",
+    "occurrences_breakdown_label": "Ocorrências por item",
+    "rhythm_stats": "Média: {{avg}} palavras · Desvio: {{stdev}} · Mín: {{min}} · Máx: {{max}}",
+    "dialogue_tag_stats": "{{withAdverb}} de {{total}} falas com verbo de fala usam advérbio",
+    "paragraph_stats": "{{total}} parágrafos analisados · maior repetição de abertura: {{maxRepeat}}x"
   },
   "checks": {
     "ai_fingerprint": "AI Fingerprint Scan",
@@ -136,7 +151,9 @@
     "save": "Salvar",
     "delete": "Excluir",
     "back": "Voltar",
-    "language_selector": "Idioma da interface"
+    "language_selector": "Idioma da interface",
+    "cancel": "Cancelar",
+    "edit": "Editar"
   },
   "payments": {
     "buy_credits": "Comprar créditos",

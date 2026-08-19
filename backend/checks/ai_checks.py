@@ -50,6 +50,10 @@ Cenas que cumprem os quatro elementos não geram finding — não force achado o
 
 Não julgue qualidade de prosa, ritmo ou voz aqui — só a arquitetura funcional da cena.
 
+IMPORTANTE: o campo "summary" é obrigatório em toda resposta, mesmo sem findings — nunca retorne
+summary vazio ou genérico demais. Explique em 1-2 frases por que o capítulo passou (ou não) neste
+critério, mesmo quando todas as cenas cumprem os quatro elementos.
+
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {
   "check": "scene_objective",
@@ -75,6 +79,10 @@ Analise cada cena do capítulo. Sinalize apenas cenas que falham nos TRÊS crit�
 uma cena só precisa de um dos três pra passar, então não sinalize cena que tem pelo menos um presente.
 
 Não julgue gramática, ritmo de frase ou voz aqui — só se a cena "segura" o leitor de algum jeito.
+
+IMPORTANTE: o campo "summary" é obrigatório em toda resposta, mesmo sem findings — nunca retorne
+summary vazio ou genérico demais. Explique em 1-2 frases por que o capítulo passou (ou não) neste
+critério, mesmo quando todas as cenas seguram o leitor por pelo menos um dos três elementos.
 
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {
@@ -115,6 +123,10 @@ de texto/tempo dedicado ao que vem depois) está alinhado ao tipo de evento. Sin
 DESCOMPASSOS reais: evento que pedia linger mas foi cortado seco, ou evento que pedia corte seco
 mas ficou se alongando desnecessariamente.
 
+IMPORTANTE: o campo "summary" é obrigatório em toda resposta, mesmo sem findings — nunca retorne
+summary vazio ou genérico demais. Explique em 1-2 frases por que o capítulo passou (ou não) neste
+critério, mesmo quando todos os eventos de alta intensidade têm tratamento posterior alinhado.
+
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {
   "check": "linger_cortar",
@@ -147,6 +159,10 @@ conflito, segredo em jogo, disputa de poder implícita).
 Não sinalize diálogos que são propositalmente diretos por design (ex: ordem militar, troca de
 informação logística sem carga emocional em jogo) — isso não é falha, é escolha correta de registro.
 
+IMPORTANTE: o campo "summary" é obrigatório em toda resposta, mesmo sem findings — nunca retorne
+summary vazio ou genérico demais. Explique em 1-2 frases por que o capítulo passou (ou não) neste
+critério, mesmo quando todos os diálogos relevantes têm subtexto adequado.
+
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {
   "check": "subtext_frame",
@@ -174,6 +190,10 @@ Analise os personagens com diálogo neste capítulo e avalie:
 
 Se o capítulo não tiver diálogo suficiente pra avaliar (menos de 2 personagens falando, ou falas
 muito curtas), retorne findings vazio e diga isso no summary — não force uma avaliação sem base.
+
+IMPORTANTE: o campo "summary" é obrigatório em toda resposta, mesmo sem findings — nunca retorne
+summary vazio ou genérico demais. Explique em 1-2 frases por que o capítulo passou (ou não) neste
+critério, ou por que não havia base suficiente para avaliar.
 
 FORMATO DE SAÍDA (JSON estrito, sem texto fora do JSON):
 {

@@ -2,8 +2,25 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './ui/dialog';
 import { Button } from './ui/button';
+import { Checkbox } from './ui/checkbox';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from './ui/select';
 
-export function AnalysisConfirmModal({ open, onOpenChange, estimate, onConfirm, loading }) {
+const EXPLANATION_LANGUAGES = [
+  { value: 'pt-BR', label: 'Português (Brasil)' },
+  { value: 'en', label: 'English' },
+];
+
+export function AnalysisConfirmModal({
+  open,
+  onOpenChange,
+  estimate,
+  onConfirm,
+  loading,
+  includeCritical,
+  onIncludeCriticalChange,
+  explanationLanguage,
+  onExplanationLanguageChange,
+}) {
   const { t } = useTranslation();
   if (!estimate) return null;
 
@@ -24,9 +41,36 @@ export function AnalysisConfirmModal({ open, onOpenChange, estimate, onConfirm, 
             {t('modal.cost_facts')}
           </div>
           <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-amber-400 text-xs" data-testid="analysis-cost-estimate">
-            {t('modal.cost_ai', { credits: estimate.creditos_estimados_ia, balance: estimate.saldo_atual })}
+            <label className="flex items-start gap-2 cursor-pointer">
+              <Checkbox
+                checked={includeCritical}
+                onCheckedChange={onIncludeCriticalChange}
+                data-testid="include-critical-reading-checkbox"
+                className="mt-0.5 border-amber-400/40 data-[state=checked]:bg-amber-400 data-[state=checked]:border-amber-400"
+              />
+              <span>{t('modal.cost_ai', { credits: estimate.creditos_estimados_ia, balance: estimate.saldo_atual })}</span>
+            </label>
           </div>
-          {!estimate.saldo_suficiente && estimate.creditos_estimados_ia > 0 && (
+
+          {includeCritical && (
+            <div className="space-y-1.5" data-testid="explanation-language-row">
+              <label className="text-xs text-[#9CA3AF]">{t('modal.explanation_lang_label')}</label>
+              <Select value={explanationLanguage || '__same__'} onValueChange={(v) => onExplanationLanguageChange(v === '__same__' ? '' : v)}>
+                <SelectTrigger data-testid="explanation-language-select" className="bg-[#0C0C0E] border-white/10 text-[#E6E4DD] h-9">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-[#121215] border-white/10 text-[#E6E4DD]">
+                  <SelectItem value="__same__">{t('modal.explanation_lang_same')}</SelectItem>
+                  {EXPLANATION_LANGUAGES.map((l) => (
+                    <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-[11px] text-[#9CA3AF]">{t('modal.explanation_lang_hint')}</p>
+            </div>
+          )}
+
+          {includeCritical && !estimate.saldo_suficiente && estimate.creditos_estimados_ia > 0 && (
             <Link
               to="/comprar-creditos"
               data-testid="modal-buy-credits-link"

@@ -48,4 +48,11 @@ def analyze(text: str, idioma: str) -> dict:
         'score': round(statistics.pstdev(lengths), 2) if len(lengths) > 1 else 0,
         'contagem': len(detalhes),
         'detalhes': detalhes,
+        'metricas': {
+            'total_frases': len(lengths),
+            'media_palavras': round(statistics.mean(lengths), 2) if lengths else 0,
+            'desvio_padrao': round(statistics.pstdev(lengths), 2) if len(lengths) > 1 else 0,
+            'minimo': min(lengths) if lengths else 0,
+            'maximo': max(lengths) if lengths else 0,
+        },
     }
