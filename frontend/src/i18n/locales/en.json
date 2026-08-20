@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "CoWriter",
-    "tagline": "Intelligent fiction chapter revision"
+    "tagline": "Intelligent Revision"
   },
   "auth": {
     "login_title": "Log in",
